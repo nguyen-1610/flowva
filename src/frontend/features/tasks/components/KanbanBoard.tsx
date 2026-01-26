@@ -18,7 +18,11 @@ const mockTasks: Task[] = [
   { id: 't5', title: 'Setup CI/CD Pipeline', status: TaskStatus.DONE, assignees: [mockUsers[1]], dueDate: 'Oct 20', priority: 'Medium', tag: 'DevOps' },
 ];
 
-const KanbanBoard: React.FC = () => {
+interface KanbanBoardProps {
+  tasks?: Task[];
+}
+
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks = mockTasks }) => {
   const columns = [
     { id: TaskStatus.TODO, title: 'To Do', color: 'bg-slate-100 border-t-4 border-slate-400' },
     { id: TaskStatus.IN_PROGRESS, title: 'In Progress', color: 'bg-blue-50 border-t-4 border-blue-500' },
@@ -48,13 +52,13 @@ const KanbanBoard: React.FC = () => {
 
       <div className="flex h-[calc(100%-80px)] gap-6 pb-4">
         {columns.map((col) => {
-          const tasks = mockTasks.filter(t => t.status === col.id);
+          const columnTasks = tasks.filter(t => t.status === col.id);
           return (
             <div key={col.id} className="w-80 flex-shrink-0 flex flex-col h-full rounded-lg bg-slate-50/80 border border-slate-200">
               <div className={`p-3 rounded-t-lg flex justify-between items-center ${col.color.split(' ')[2]} border-t-4 bg-white shadow-sm`}>
                 <h3 className="font-semibold text-slate-700 text-sm flex items-center gap-2">
                   {col.title}
-                  <span className="bg-slate-100 text-slate-500 text-xs py-0.5 px-2 rounded-full">{tasks.length}</span>
+                  <span className="bg-slate-100 text-slate-500 text-xs py-0.5 px-2 rounded-full">{columnTasks.length}</span>
                 </h3>
                 <button className="text-slate-400 hover:text-slate-600">
                   <MoreHorizontal size={16} />
@@ -62,7 +66,7 @@ const KanbanBoard: React.FC = () => {
               </div>
 
               <div className="flex-1 overflow-y-auto p-3 space-y-3">
-                {tasks.map((task) => (
+                {columnTasks.map((task) => (
                   <div key={task.id} className="bg-white p-4 rounded-md shadow-sm border border-slate-100 hover:shadow-md transition-shadow cursor-pointer group">
                     <div className="flex justify-between items-start mb-2">
                       <span className={`text-xs px-2 py-1 rounded font-medium ${

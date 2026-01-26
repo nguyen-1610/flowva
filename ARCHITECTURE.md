@@ -74,10 +74,10 @@ graph TD
     Contract -.-> UI
     
     %% STYLING
-    classDef fe fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
-    classDef server fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    classDef infra fill:#fff3e0,stroke:#ef6c00,stroke-width:2px;
-    classDef shared fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef fe fill:#BBDEFB,stroke:#0D47A1,stroke-width:2px,color:#000000;
+    classDef server fill:#C8E6C9,stroke:#1B5E20,stroke-width:2px,color:#000000;
+    classDef infra fill:#FFE0B2,stroke:#E65100,stroke-width:2px,color:#000000;
+    classDef shared fill:#E1BEE7,stroke:#4A148C,stroke-width:2px,stroke-dasharray: 5 5,color:#000000;
 
     class UI,ClientLogic,AuthHook,FormHandler fe;
     class Middleware,RSC,S_Action,Service,Repo server;

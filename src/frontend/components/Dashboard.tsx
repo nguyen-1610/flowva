@@ -3,12 +3,21 @@
 import React from 'react';
 import { TrendingUp, Users, CheckCircle, AlertCircle } from 'lucide-react';
 
-const Dashboard: React.FC = () => {
-  const stats = [
-    { label: 'Total Tasks', value: '42', icon: CheckCircle, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { label: 'In Progress', value: '12', icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-100' },
-    { label: 'Urgent', value: '3', icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-100' },
-    { label: 'Team Members', value: '8', icon: Users, color: 'text-green-600', bg: 'bg-green-100' },
+interface DashboardProps {
+  stats: {
+    totalTasks: number;
+    inProgress: number;
+    urgent: number;
+    teamMembers: number;
+  };
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
+  const statsDisplay = [
+    { label: 'Total Tasks', value: stats.totalTasks.toString(), icon: CheckCircle, color: 'text-blue-600', bg: 'bg-blue-100' },
+    { label: 'In Progress', value: stats.inProgress.toString(), icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-100' },
+    { label: 'Urgent', value: stats.urgent.toString(), icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-100' },
+    { label: 'Team Members', value: stats.teamMembers.toString(), icon: Users, color: 'text-green-600', bg: 'bg-green-100' },
   ];
 
   return (
@@ -18,7 +27,7 @@ const Dashboard: React.FC = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        {stats.map((stat, idx) => {
+        {statsDisplay.map((stat, idx) => {
            const Icon = stat.icon;
            return (
              <div key={idx} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
@@ -41,7 +50,7 @@ const Dashboard: React.FC = () => {
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex gap-4 items-start pb-4 border-b border-slate-200 last:border-0 last:pb-0">
-                <img src={`https://picsum.photos/32/32?random=${i}`} className="w-8 h-8 rounded-full" />
+                <img src={`https://picsum.photos/32/32?random=${i}`} className="w-8 h-8 rounded-full" alt={`User ${i}`} />
                 <div>
                    <p className="text-sm text-slate-800"><span className="font-semibold">User {i}</span> moved task <span className="font-medium text-indigo-600">Update API Docs</span> to <span className="italic">In Progress</span></p>
                    <p className="text-xs text-slate-400 mt-1">2 hours ago</p>

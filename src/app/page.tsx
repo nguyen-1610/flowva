@@ -1,26 +1,8 @@
-'use client';
-
 import React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowRight, Layers } from 'lucide-react';
-import DashboardPage from './(dashboard)/page';
 
 export default function HomePage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const showDashboard = searchParams.get('dashboard') === 'true';
-
-  const handleSelectProject = () => {
-    // Redirect to dashboard by adding query param
-    router.push('/?dashboard=true');
-  };
-
-  // If dashboard query param is present, show dashboard
-  if (showDashboard) {
-    return <DashboardPage />;
-  }
-
-  // Otherwise show landing page
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col items-center justify-center p-6">
       {/* Header / Nav simulation */}
@@ -54,7 +36,7 @@ export default function HomePage() {
 
           <div className="space-y-4">
             {/* Project Card */}
-            <div className="group flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer bg-slate-50 hover:bg-white" onClick={handleSelectProject}>
+            <Link href="/dashboard" className="group flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer bg-slate-50 hover:bg-white">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-sm group-hover:scale-110 transition-transform">
                   <span className="font-bold text-lg">PA</span>
@@ -65,10 +47,10 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <button className="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-2 px-6 rounded-lg flex items-center gap-2 transition-colors transform group-hover:translate-x-1 duration-200">
+              <span className="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-2 px-6 rounded-lg flex items-center gap-2 transition-colors transform group-hover:translate-x-1 duration-200">
                 Go to Project <ArrowRight size={16} />
-              </button>
-            </div>
+              </span>
+            </Link>
 
              {/* Secondary Project (Disabled/Mock) */}
              <div className="group flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-slate-300 transition-all cursor-not-allowed opacity-60">
@@ -103,3 +85,4 @@ export default function HomePage() {
     </div>
   );
 }
+

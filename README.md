@@ -95,9 +95,12 @@ flowva/
 ├── src/                            # [MOVED] Tất cả source code nằm trong src/
 │   ├── app/                        # NEXT.JS APP ROUTER (Routing only)
 │   │   ├── (auth)/                 # Group Route: Login/Register
-│   │   ├── (dashboard)/            # Group Route: App chính
-│   │   │   ├── layout.tsx
-│   │   │   └── tasks/page.tsx
+│   │   ├── dashboard/              # Dashboard Routes (Explicit Segment)
+│   │   │   ├── tasks/              # /dashboard/tasks
+│   │   │   ├── calendar/           # /dashboard/calendar
+│   │   │   ├── chat/               # /dashboard/chat
+│   │   │   ├── layout.tsx          # Dashboard Shared Layout
+│   │   │   └── page.tsx            # /dashboard
 │   │   ├── layout.tsx              # Root Layout
 │   │   ├── page.tsx                # Landing Page
 │   │   └── globals.css             # Tailwind v4 Config (@theme)

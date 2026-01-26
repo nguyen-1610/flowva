@@ -32,32 +32,32 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
   const getRouteForView = (view: ViewType): string => {
     switch (view) {
       case ViewType.DASHBOARD:
-        return '/';
+        return '/dashboard';
       case ViewType.BACKLOG:
-        return '/tasks?view=backlog';
+        return '/dashboard/tasks?view=backlog';
       case ViewType.KANBAN:
-        return '/tasks';
+        return '/dashboard/tasks';
       case ViewType.CALENDAR:
-        return '/calendar';
+        return '/dashboard/calendar';
       case ViewType.CHAT:
-        return '/chat';
+        return '/dashboard/chat';
       case ViewType.SETTINGS:
-        return '/settings';
+        return '/dashboard/settings';
       default:
-        return '/';
+        return '/dashboard';
     }
   };
 
   // Determine current view from pathname
   const getCurrentViewFromPath = (): ViewType => {
-    if (pathname === '/') return ViewType.DASHBOARD;
-    if (pathname === '/tasks') {
+    if (pathname === '/dashboard') return ViewType.DASHBOARD;
+    if (pathname === '/dashboard/tasks') {
       // Check query params for backlog
       return searchParams.get('view') === 'backlog' ? ViewType.BACKLOG : ViewType.KANBAN;
     }
-    if (pathname === '/calendar') return ViewType.CALENDAR;
-    if (pathname === '/chat') return ViewType.CHAT;
-    if (pathname === '/settings') return ViewType.SETTINGS;
+    if (pathname === '/dashboard/calendar') return ViewType.CALENDAR;
+    if (pathname === '/dashboard/chat') return ViewType.CHAT;
+    if (pathname === '/dashboard/settings') return ViewType.SETTINGS;
     return ViewType.DASHBOARD;
   };
 

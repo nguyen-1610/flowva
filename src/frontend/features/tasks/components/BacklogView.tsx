@@ -13,9 +13,13 @@ const mockBacklogTasks: Task[] = [
   { id: 't7', title: 'Database Migration', status: TaskStatus.TODO, assignees: [], dueDate: 'Nov 1', priority: 'High', tag: 'DevOps', sprint: 'Backlog' },
 ];
 
-const BacklogView: React.FC = () => {
-  const sprintTasks = mockBacklogTasks.filter(t => t.sprint === 'Sprint 24');
-  const backlogTasks = mockBacklogTasks.filter(t => t.sprint === 'Backlog');
+interface BacklogViewProps {
+  tasks?: Task[];
+}
+
+const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) => {
+  const sprintTasks = tasks.filter(t => t.sprint === 'Sprint 24');
+  const backlogTasks = tasks.filter(t => t.sprint === 'Backlog');
 
   const renderTaskRow = (task: Task) => (
     <div key={task.id} className="group flex items-center gap-3 bg-white p-2.5 border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer">
