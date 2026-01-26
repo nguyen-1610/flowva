@@ -84,72 +84,54 @@ Dự án áp dụng kiến trúc **Modular Monolith** , chia tách rõ ràng Fro
 
 ```
 flowva/
+├── .agent/                         # [NEW] AI AGENT SKILLS (Antigravity/Cursor)
+│   └── skills/
+│       └── vercel-react-best-practices/
+│           └── SKILL.md            # Quy tắc Performance & Server Actions
+│
 ├── .github/
-│   └── PULL_REQUEST_TEMPLATE.md    # Template PR
+│   └── PULL_REQUEST_TEMPLATE.md
 │
-├── app/                            # NEXT.JS APP ROUTER (Routing & Entry Points)
-│   ├── (auth)/                     # Group Route: Login/Register
-│   │   ├── login/page.tsx
-│   │   └── layout.tsx
-│   ├── (dashboard)/                # Group Route: App chính (Sidebar)
-│   │   ├── layout.tsx              # Chứa Sidebar & Header
-│   │   ├── tasks/page.tsx          # Trang Task
-│   │   └── projects/page.tsx       # Trang Project
+├── src/                            # [MOVED] Tất cả source code nằm trong src/
+│   ├── app/                        # NEXT.JS APP ROUTER (Routing only)
+│   │   ├── (auth)/                 # Group Route: Login/Register
+│   │   ├── (dashboard)/            # Group Route: App chính
+│   │   │   ├── layout.tsx
+│   │   │   └── tasks/page.tsx
+│   │   ├── layout.tsx              # Root Layout
+│   │   ├── page.tsx                # Landing Page
+│   │   └── globals.css             # Tailwind v4 Config (@theme)
 │   │
-│   ├── api/                        # BACKEND ENTRY POINT (Route Handlers)
-│   │   ├── auth/                   # (Optional) Nếu cần custom auth logic
-│   │   ├── tasks/
-│   │   │   └── route.ts            # [QUAN TRỌNG] Route + Controller (Validate & Gọi Service)
-│   │   └── projects/
-│   │       └── route.ts
-│   |
-│   ├── layout.tsx              <-- [BẮT BUỘC] Root Layout (Chứa html, body)
-|   ├── page.tsx                <-- [BẮT BUỘC] Landing Page (Giới thiệu Flowva)
-│   └── globals.css                 # Tailwind v4 Config (@theme)
-│
-├── src/
-│   ├── backend/                    # SERVER-SIDE LOGIC (Chỉ chạy trên Server)
-│   │   ├── services/               # [QUAN TRỌNG] LOGIC NGHIỆP VỤ & DB CALL
-│   │   │   ├── task.service.ts     # Chứa hàm: createTask, getTasks...
+│   ├── backend/                    # SERVER-SIDE LOGIC (Pure Business Logic)
+│   │   ├── services/               # [CORE] Logic nghiệp vụ & DB Call
+│   │   │   ├── task.service.ts     # Hàm xử lý: getTasks, createTask...
 │   │   │   └── user.service.ts
 │   │   └── lib/                    # Cấu hình Server
 │   │       ├── prisma.ts           # Prisma Client Instance
-│   │       └── supabase.ts         # Supabase Admin Client (nếu cần)
+│   │       └── supabase.ts         # Supabase Admin Client
 │   │
-│   ├── frontend/                   # CLIENT-SIDE LOGIC (React)
-│   │   ├── components/             # UI Dùng chung (Button, Input, Modal)
-│   │   ├── lib/                    # Cấu hình Client
-│   │   │   ├── axios.ts            # Axios Instance (Gắn sẵn Base URL)
+│   ├── frontend/                   # CLIENT-SIDE UI
+│   │   ├── components/             # Shared UI Components (Button, Modal...)
+│   │   ├── lib/
 │   │   │   └── utils.ts            # Hàm tiện ích (cn, formatDate)
-│   │   ├── hooks/                  # Hooks dùng chung (useDebounce, useToggle)
-│   │   ├── providers/              # Context (AuthProvider, ThemeProvider)
-│   │   │
-│   │   └── features/               # [MODULAR] TÍNH NĂNG
-│   │       ├── auth/               # Module Auth
-│   │       │   ├── components/     # LoginForm, RegisterForm
-│   │       │   └── hooks/          # useAuth.ts (Gọi Supabase trực tiếp)
-│   │       │
-│   │       |── tasks/              # Module Task
-│   │           ├── components/     # TaskCard, TaskColumn, CreateTaskModal
-│   │           ├── hooks/          # useTasks.ts, useDragDrop.ts
-│   │           |── services/       # task.api.ts (Gọi axios sang /api/tasks)
-|   | 		├── stores/              # State Management (Zustand)
-│   |		|   └── task-ui.store.ts # Quản lý viewMode, filter...
-|   | 		└── types/               # Local Types definition
-|   | 		    └── index.ts         # Props, UI Interfaces
+│   │   │   # NOTE: Đã xóa axios.ts
+│   │   ├── features/               # [MODULAR] TÍNH NĂNG
+│   │   │   ├── auth/
+│   │   │   └── tasks/
+│   │   │       ├── components/     # UI: TaskCard, TaskList...
+│   │   │       ├── actions.ts      # [NEW] SERVER ACTIONS (Giao tiếp Backend)
+│   │   │       ├── hooks/          # React Hooks (useTransition, useFormStatus)
+│   │   │       └── stores/         # Zustand State (UI State only)
+│   │   └── providers/              # Context Providers
 │   │
-│   │
-│   └── shared/                     # CONTRACT (Dùng chung FE & BE)
-│       ├── types/
-│           ├── common.ts           # ApiResponse, Pagination
-│           ├── tasks.ts            # TaskDTO, CreateTaskRequest
+│   └── shared/                     # CONTRACT (Types/DTOs)
+│       └── types/                  # Zod Schemas & Interfaces
 │
-├── prisma/
-│   └── schema.prisma               # Database Schema
-│
+├── prisma/                         # Database Schema
 ├── public/                         # Static Assets
-├── middleware.ts                   # [QUAN TRỌNG] Next.js Middleware (Check Cookie Auth)
-├── .env.local                      # Biến môi trường
+├── .cursorrules                    # [NEW] Luật & Context cho AI
+├── middleware.ts                   # Middleware (Check Cookie Auth)
+├── next.config.ts
 ├── package.json
 └── tsconfig.json
 ```

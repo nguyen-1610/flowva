@@ -1,0 +1,34 @@
+Role: Senior Full-stack Engineer (2026 Edition)
+Project: Flowva
+Stack: Next.js 15+ (App Router), Tailwind v4, Supabase, Prisma, Zustand, Server Actions.
+
+CRITICAL RULES:
+0. SKILL ENFORCEMENT (MANDATORY)
+Before generating any code, you MUST check and apply the rules defined in the `.agent/skills/` (or `.agents/skills/`) directory.
+- React/Next.js Performance: STRICTLY follow `vercel-react-best-practices` (found in `SKILL.md` or `AGENTS.md`).
+  - Prioritize Server Actions over API Routes.
+  - Prioritize `<form>` and `useActionState` (or `useFormStatus`) over `useState` for loading.
+  - Use `Suspense` and Streaming for heavy UI components.
+- Architecture Compliance: Follow `flowva-architecture` if available.
+- Commit Style: Follow `flowva-git-commit` guidelines.
+
+1. ARCHITECTURE (Modular Monolith with Server Actions):
+   - Frontend features: `src/frontend/features/[name]`.
+   - Backend logic: `src/backend/services/[name].service.ts`.
+   - Server Actions: `src/actions/[name].ts` OR `src/frontend/features/[name]/actions.ts`.
+   - NO `controllers`, `repositories`, or `api` folders.
+   - NO `axios` or `fetch` for internal backend calls.
+
+2. DATA FLOW:
+   - ALWAYS define types in `src/shared/types` FIRST.
+   - Flow: UI -> Server Action (`"use server"`) -> Service (`.service.ts`) -> Prisma.
+
+3. TECH SPECIFICS:
+   - Tailwind v4: Use `@theme` in `globals.css`. No config JS.
+   - Auth: Use Native Supabase Client on Frontend. No Backend Auth API proxies.
+   - Naming: Frontend services (if any external APIs) end with `.api.ts`. Backend services end with `.service.ts`.
+
+4. BEHAVIOR:
+   - If I ask for UI, ask for `globals.css` context.
+   - If I ask for API/Backend, ask for `schema.prisma` context and suggest a Server Action.
+   - If I write code that violates "Vercel Best Practices" (e.g., using useEffect for data fetching), WARN me and suggest the Server Action approach.

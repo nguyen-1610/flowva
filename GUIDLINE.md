@@ -22,12 +22,12 @@ AI code sai thường do thiếu thông tin. Để code chạy ngay lần đầu
 
 > **Gửi kèm:**
 >
-> 1. `app/globals.css` (QUAN TRỌNG: Chứa biến màu `@theme` của Tailwind v4).
+> 1. `src/app/globals.css` (QUAN TRỌNG: Chứa biến màu `@theme` của Tailwind v4).
 > 2. `src/shared/types/[feature].ts` (Để biết data hiển thị có những trường nào).
 >
 > **Tại sao:** Nếu không gửi `globals.css`, AI sẽ tự chế màu hex (`#f3f4f6`) thay vì dùng biến chuẩn (`var(--background)`), làm hỏng Dark Mode.
 
-### ⚙️ Kịch bản 2: Viết Backend (API Route)
+### ⚙️ Kịch bản 2: Viết Backend (Server Actions)
 
 > **Gửi kèm:**
 >
@@ -35,7 +35,7 @@ AI code sai thường do thiếu thông tin. Để code chạy ngay lần đầu
 > 2. `src/shared/types/[feature].ts` (Hợp đồng dữ liệu vào/ra).
 > 3. `src/backend/services/[feature].service.ts` (Nếu đã có file này).
 >
-> **Tại sao:** AI cần biết `Shared Types` để validate request body chuẩn xác và biết `Prisma Schema` để query đúng tên bảng.
+> **Tại sao:** AI cần biết `Shared Types` để validate request data chuẩn xác và biết `Prisma Schema` để query đúng tên bảng.
 
 ### 🐛 Kịch bản 3: Fix lỗi (Debug)
 
@@ -61,25 +61,27 @@ Yêu cầu:
 1. Styling: Dùng biến CSS từ `globals.css` (VD: --color-primary). KHÔNG dùng file config.
 2. Structure: Đặt file tại `src/frontend/features/[tên]/components`.
 3. Logic: Tách logic ra custom hook nếu phức tạp.
-4. Types: Import DTO từ `src/shared/types`.
+4. Client Actions: Gọi Server Actions trực tiếp từ event handlers hoặc useEffect.
+5. Types: Import DTO từ `src/shared/types`.
 ```
 
-### ➤ Prompt cho Backend (Service Pattern)
+### ➤ Prompt cho Backend (Server Actions Pattern)
 
-Bỏ Controller, dùng Route Handler trực tiếp.
+Dùng Server Actions thay vì API Routes.
 
 **Plaintext**
 
 ```
-Viết API [Tên API] cho tính năng [Tên].
+Viết Server Action [Tên Action] cho tính năng [Tên].
 Yêu cầu:
 1. Service: Viết trong `src/backend/services`. Xử lý logic nghiệp vụ, check quyền và gọi Prisma.
-2. Route Handler: Viết trong `app/api/.../route.ts`. Chỉ làm 3 việc: 
-   - Parse Request Body (ép kiểu theo Shared Types).
-   - Validate cơ bản.
-   - Gọi Service và trả về `NextResponse`.
-3. Tuyệt đối KHÔNG tạo folder `controllers`.
-4. Error Handling: Dùng try/catch chuẩn trong Route.
+2. Server Action: Viết trong `src/actions/[feature].ts` hoặc `src/frontend/features/[name]/actions.ts`.
+   - Phải có dòng `"use server"` ở đầu file.
+   - Validate input bằng Zod (từ Shared Types).
+   - Gọi Service và trả về kết quả hoặc lỗi.
+   - Revalidate path nếu cần (`revalidatePath`).
+3. Tuyệt đối KHÔNG tạo folder `controllers` hay `api routes`.
+4. Error Handling: Dùng try/catch và trả về object lỗi chuẩn.
 ```
 
 ---
@@ -90,45 +92,12 @@ AI vẫn nhớ kiến thức cũ (2023-2024). Hãy coi chừng những lỗi sau
 
 **❌ Dấu hiệu AI đang "ngáo":**
 
-1. Nó tạo thư mục `src/backend/controllers` hoặc `repositories` -> **SAI** (Dự án này đã bỏ).
-2. Nó viết API Login (`/api/auth/login`) -> **SAI** (Frontend gọi thẳng Supabase Auth).
-3. Nó nhắc đến file `tailwind.config.js` -> **SAI** (Tailwind v4 cấu hình trong CSS).
+1. Nó tạo thư mục `src/app/api` hoặc `controllers` -> **SAI** (Dự án dùng Server Actions).
+2. Nó dùng `axios` hoặc `fetch` để gọi API nội bộ -> **SAI** (Gọi trực tiếp Server Action như hàm bình thường).
+3. Nó viết API Login (`/api/auth/login`) -> **SAI** (Frontend gọi thẳng Supabase Auth).
 4. Nó import `useRouter` từ `next/router` -> **SAI** (Phải là `next/navigation`).
 
 **✅ Cách sửa:**
 
-Quát nó ngay: *"Dừng lại. Dự án này dùng Modular Monolith (No Controller) và Tailwind v4. Quên kiến thức cũ đi."*
+Quát nó ngay: *"Dừng lại. Dự án này dùng Server Actions, không dùng API Routes hay Axios. Quên kiến thức cũ đi."*
 
----
-
-## 🚀 5. System Prompt (Setup cho Cursor / Windsurf / Antigravity) (Nếu muốn)
-
-Copy đoạn này vào file `.cursorrules` ở root project để AI tự động ngoan ngay từ đầu:
-
-**Markdown**
-
-```
-Role: Senior Full-stack Engineer (2026 Edition)
-Project: Flowva
-Stack: Next.js 15+ (App Router), Tailwind v4, Supabase, Prisma, Zustand.
-
-CRITICAL RULES:
-1. ARCHITECTURE (Modular Monolith):
-   - Frontend features: `src/frontend/features/[name]`.
-   - Backend logic: `src/backend/services/[name].service.ts`.
-   - API Routes: `app/api/[resource]/route.ts` (Acts as Controller).
-   - NO `controllers` or `repositories` folders.
-
-2. DATA FLOW:
-   - ALWAYS define types in `src/shared/types` FIRST.
-   - Flow: UI -> API Client (`.api.ts`) -> Route Handler -> Service (`.service.ts`) -> Prisma.
-
-3. TECH SPECIFICS:
-   - Tailwind v4: Use `@theme` in `globals.css`. No config JS.
-   - Auth: Use Native Supabase Client on Frontend. No Backend Auth API proxies.
-   - Naming: Frontend services end with `.api.ts`. Backend services end with `.service.ts`.
-
-4. BEHAVIOR:
-   - If I ask for UI, ask for `globals.css` context.
-   - If I ask for API, ask for `schema.prisma` context.
-```
