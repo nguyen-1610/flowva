@@ -138,7 +138,7 @@ flowva/
 
 # 💡 Hướng Dẫn Code Nhanh (Mini Guide)
 
-Khi nhận task mới, hãy tuân thủ quy tắc **"Modular Monolith"** (Tính năng nào, ở nhà đó).
+Khi nhận task mới, hãy tuân thủ quy tắc **"Modular Monolith"** và **"Server Actions"**.
 
 ### 1. Khi tạo UI Component & State (Frontend)
 
@@ -146,19 +146,24 @@ Khi nhận task mới, hãy tuân thủ quy tắc **"Modular Monolith"** (Tính 
   👉 Tạo vào: `src/frontend/components/`
 - **Case B: Card Task, Form trong tính năng Project (Chỉ dùng cho 1 tính năng)?**
   👉 Tạo vào: `src/frontend/features/[tên-feature]/components/`
-- **Case C: State quản lý giao diện (Zustand) hoặc Types nội bộ?**
-  👉 Tạo vào: `src/frontend/features/[tên-feature]/stores/` hoặc `types/`
+- **Case C: State quản lý giao diện (Zustand)?**
+  👉 Tạo vào: `src/frontend/features/[tên-feature]/stores/`
 
-### 2. Khi viết Logic xử lý (Backend)
+### 2. Khi viết Logic xử lý (Backend & Data Flow)
 
-Luồng dữ liệu chuẩn: **Route Handler** (kiêm Controller) -> **Service** -> **Database** .
+Luồng dữ liệu chuẩn: **Server Action** (Thay thế API Route) -> **Service** -> **Database**.
 
-- **Bước 1 (The Contract):** Cập nhật file `src/shared/types/...` để thống nhất dữ liệu vào/ra.
-- **Bước 2 (Service - Bếp trưởng):** Viết logic nghiệp vụ & gọi Prisma trong `src/backend/services/[tên].service.ts`.
-- **Bước 3 (Route - Lễ tân):**
-  - Tạo file `app/api/[tên-resource]/route.ts`.
-  - Tại đây: Nhận Request -> Validate dữ liệu -> Gọi Service ở bước 2 -> Trả Response.
-  - _Lưu ý:_ **KHÔNG** tạo thư mục `controllers` riêng nữa.
+- **Bước 1 (The Contract):** Cập nhật file `src/shared/types/...` để thống nhất dữ liệu (Interface & Zod Schema).
+- **Bước 2 (Service - Bếp trưởng):**
+  - Viết logic nghiệp vụ & gọi Prisma trong `src/backend/services/[tên].service.ts`.
+  - Hàm này trả về dữ liệu thuần (Plain Object), **KHÔNG** trả về `NextResponse`.
+- **Bước 3 (Server Action - Người phục vụ):**
+  - Tạo file `actions.ts` trong thư mục feature (VD: `src/frontend/features/tasks/actions.ts`).
+  - Khai báo `"use server"` ở dòng đầu tiên.
+  - Gọi hàm Service ở Bước 2.
+- **Bước 4 (Kết nối UI):**
+  - Nếu lấy dữ liệu (GET): Gọi thẳng Service trong `page.tsx` (Server Component).
+  - Nếu gửi dữ liệu (POST/PUT): Gọi Server Action từ Bước 3 trong `form` hoặc `onClick`.
 
 ### 3. Khi sửa Database (Prisma)
 
@@ -166,18 +171,8 @@ Luồng dữ liệu chuẩn: **Route Handler** (kiêm Controller) -> **Service**
 - **Bước 2:** Đẩy lên DB (Cập nhật bảng):
   **Bash**
 
-  ```
+  ```bash
   npx prisma db push
-  ```
-- **Bước 3 (BẮT BUỘC):** Chạy lệnh tạo lại code Prisma Client:
-  **Bash**
-
-  ```
-  npx prisma generate
-  ```
-
-  _(Không chạy lệnh này là VS Code không gợi ý code mới đâu!)_
-
 ### 4. Quy tắc đặt tên (Naming Convention) 🚨
 
 - **Component:** PascalCase (VD: `TaskCard.tsx`, `ConfirmModal.tsx`)
