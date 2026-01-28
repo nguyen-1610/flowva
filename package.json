@@ -9,7 +9,8 @@
     "lint": "next lint",
     "install:all": "npm install && npx prisma generate",
     "db:push": "npx prisma db push",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@prisma/client": "^7.3.0",
@@ -33,6 +34,8 @@
     "@types/react-dom": "^19.0.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.3.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.7.2"

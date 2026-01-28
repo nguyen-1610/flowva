@@ -17,13 +17,13 @@ export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 export interface TaskDTO {
   id: string;
   title: string;
-  description: string | null;   // Có thể null nếu user không nhập
+  description: string | null; // Có thể null nếu user không nhập
   status: TaskStatus;
   priority: TaskPriority;
-  order: number;                // Dùng để sắp xếp vị trí (nếu làm Kanban)
-  
+  order: number; // Dùng để sắp xếp vị trí (nếu làm Kanban)
+
   // Quan trọng: Date truyền qua API luôn là chuỗi ISO "2024-01-01T10:00:00Z"
-  dueDate: string | null;       
+  dueDate: string | null;
   createdAt: string;
   updatedAt: string;
 
@@ -46,13 +46,13 @@ export interface TaskDTO {
 // 👉 Form tạo mới (Create)
 // Không có ID, không có createdAt (DB tự sinh)
 export interface CreateTaskRequest {
-  title: string;                // Bắt buộc
-  projectId: string;            // Bắt buộc
-  description?: string;         // Optional (dấu ?)
-  priority?: TaskPriority;      // Nếu không gửi, Server tự set mặc định
+  title: string; // Bắt buộc
+  projectId: string; // Bắt buộc
+  description?: string; // Optional (dấu ?)
+  priority?: TaskPriority; // Nếu không gửi, Server tự set mặc định
   status?: TaskStatus;
-  dueDate?: string;             // Gửi string ISO
-  assigneeId?: string;          // Chỉ gửi ID user, Backend tự check
+  dueDate?: string; // Gửi string ISO
+  assigneeId?: string; // Chỉ gửi ID user, Backend tự check
 }
 
 // 👉 Form cập nhật (Update)
@@ -60,12 +60,12 @@ export interface CreateTaskRequest {
 // Riêng trường hợp muốn xóa Assignee thì cần gửi null -> nên dùng Type Union
 export interface UpdateTaskRequest {
   title?: string;
-  description?: string | null;  // Gửi null để xóa description cũ
+  description?: string | null; // Gửi null để xóa description cũ
   status?: TaskStatus;
   priority?: TaskPriority;
   dueDate?: string | null;
-  order?: number;               // Khi kéo thả Kanban
-  assigneeId?: string | null;   // Gửi null để gỡ người làm (Unassign)
+  order?: number; // Khi kéo thả Kanban
+  assigneeId?: string | null; // Gửi null để gỡ người làm (Unassign)
 }
 
 // --- 4. FILTERS (Query Params) ---
@@ -73,10 +73,10 @@ export interface UpdateTaskRequest {
 export interface TaskFilterParams {
   page?: number;
   limit?: number;
-  search?: string;              // Tìm theo title
+  search?: string; // Tìm theo title
   status?: TaskStatus;
   priority?: TaskPriority;
   assigneeId?: string;
   projectId?: string;
-  isOverdue?: boolean;          // Lọc task quá hạn
+  isOverdue?: boolean; // Lọc task quá hạn
 }

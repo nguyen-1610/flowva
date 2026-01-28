@@ -176,6 +176,8 @@ Luồng dữ liệu chuẩn: **Server Action** (Thay thế API Route) -> **Servi
 
   ```bash
   npx prisma db push
+  ```
+
 ### 4. Quy tắc đặt tên (Naming Convention) 🚨
 
 - **Component:** PascalCase (VD: `TaskCard.tsx`, `ConfirmModal.tsx`)
@@ -193,55 +195,55 @@ Luồng dữ liệu chuẩn: **Server Action** (Thay thế API Route) -> **Servi
 
 Công thức: `[loại]/[tên-ngắn-gọn]`
 
-* **Quy tắc:** Viết thường toàn bộ, dùng gạch nối `-` thay cho khoảng trắng, không dấu tiếng Việt.
+- **Quy tắc:** Viết thường toàn bộ, dùng gạch nối `-` thay cho khoảng trắng, không dấu tiếng Việt.
 
-| **Loại nhánh**  | **Ý nghĩa**             | **Ví dụ**                              |
-| ----------------------- | ------------------------------- | ---------------------------------------------- |
+| **Loại nhánh**  | **Ý nghĩa**                  | **Ví dụ**                                  |
+| --------------- | ---------------------------- | ------------------------------------------ |
 | **`feat/`**     | Tính năng mới                | `feat/create-task-api`,`feat/login-ui`     |
-| **`fix/`**      | Sửa lỗi (Bug)                 | `fix/header-alignment`,`fix/api-error-500` |
+| **`fix/`**      | Sửa lỗi (Bug)                | `fix/header-alignment`,`fix/api-error-500` |
 | **`chore/`**    | Việc lặt vặt (Config, Setup) | `chore/setup-prisma`,`chore/update-readme` |
-| **`refactor/`** | Viết lại code cho sạch       | `refactor/task-service`                      |
+| **`refactor/`** | Viết lại code cho sạch       | `refactor/task-service`                    |
 
 #### B. Quy tắc viết Commit (Conventional Commits)
 
-Tuyệt đối không commit kiểu:  *"fix"* ,  *"update"* ,  *"code xong roi"* .
+Tuyệt đối không commit kiểu: _"fix"_ , _"update"_ , _"code xong roi"_ .
 
 Công thức: **`[Type]([Scope]): [Nội dung ngắn gọn]`**
 
 **1. Type (Loại thay đổi):**
 
-* `feat`: Tính năng mới.
-* `fix`: Sửa lỗi.
-* `ui`: Chỉ chỉnh sửa CSS, giao diện (không dính logic).
-* `refactor`: Sửa code nhưng không đổi tính năng.
-* `chore`: Việc vặt (cập nhật dependency, config).
+- `feat`: Tính năng mới.
+- `fix`: Sửa lỗi.
+- `ui`: Chỉ chỉnh sửa CSS, giao diện (không dính logic).
+- `refactor`: Sửa code nhưng không đổi tính năng.
+- `chore`: Việc vặt (cập nhật dependency, config).
 
 **2. Scope (Phạm vi - Nơi bạn sửa code):**
 
-* `fe`: Frontend (`src/frontend`, `app/dashboard`...)
-* `be`: Backend (`src/backend`, `app/api`...)
-* `db`: Database (`prisma/schema`)
-* `shared`: File dùng chung (`src/shared`)
-* `auth`, `task`: (Hoặc tên Feature cụ thể nếu commit chỉ sửa 1 feature)
+- `fe`: Frontend (`src/frontend`, `app/dashboard`...)
+- `be`: Backend (`src/backend`, `app/api`...)
+- `db`: Database (`prisma/schema`)
+- `shared`: File dùng chung (`src/shared`)
+- `auth`, `task`: (Hoặc tên Feature cụ thể nếu commit chỉ sửa 1 feature)
 
 **3. Ví dụ Chuẩn (Copy mà học theo):**
 
-* ✅ **Làm Backend:**
+- ✅ **Làm Backend:**
   `feat(be): add create task service and api`
-* ✅ **Làm Frontend:**
+- ✅ **Làm Frontend:**
   `feat(fe): integrate create task api to UI`
-* ✅ **Sửa Database:**
+- ✅ **Sửa Database:**
   `chore(db): add status column to Task table`
-* ✅ **Sửa giao diện:**
+- ✅ **Sửa giao diện:**
   `ui(fe): update dark mode colors for TaskCard`
-* ✅ **Sửa Hợp đồng:**
+- ✅ **Sửa Hợp đồng:**
   `refactor(shared): update TaskDTO interface`
 
 ---
 
 ### 💡 Mẹo nhỏ (Tips)
 
-* **Trước khi tạo nhánh mới:** Luôn `git checkout main` và `git pull` để lấy code mới nhất về.
-* **Trước khi Commit:** Hãy tự review lại xem mình có lỡ để quên `console.log` hay file rác không.
+- **Trước khi tạo nhánh mới:** Luôn `git checkout main` và `git pull` để lấy code mới nhất về.
+- **Trước khi Commit:** Hãy tự review lại xem mình có lỡ để quên `console.log` hay file rác không.
 
 _Happy Coding! 🚀_

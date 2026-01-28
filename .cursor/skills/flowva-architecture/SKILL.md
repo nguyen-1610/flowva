@@ -8,6 +8,7 @@ description: Cấu trúc dự án Flowva (Next.js 16 Modular Monolith). Sử d�
 Dự án tuân thủ nghiêm ngặt cấu trúc Modular Monolith. Mọi code phải nằm trong `src/`.
 
 ## 1. Bản đồ thư mục (Directory Map)
+
 - **`src/app/`**: Chỉ chứa Routing (Page, Layout) và Global Styles.
   - **TUYỆT ĐỐI KHÔNG** chứa logic nghiệp vụ phức tạp tại đây.
   - **TUYỆT ĐỐI KHÔNG** tạo `api/` routes (dùng Server Actions thay thế).
@@ -20,6 +21,7 @@ Dự án tuân thủ nghiêm ngặt cấu trúc Modular Monolith. Mọi code ph�
   - `stores/`: Zustand State (UI state only).
 
 ## 2. Quy tắc đặt file mới
+
 - **UI Component dùng chung?** → `src/frontend/components/`
 - **UI Component riêng feature?** → `src/frontend/features/[name]/components/`
 - **Server Action?** → `src/frontend/features/[name]/actions.ts`
@@ -27,4 +29,5 @@ Dự án tuân thủ nghiêm ngặt cấu trúc Modular Monolith. Mọi code ph�
 - **Types/DTOs?** → `src/shared/types/[name].ts`
 
 ## 3. Tech Stack
+
 Xem chi tiết trong `README.md` hoặc `GUIDLINE.md`.

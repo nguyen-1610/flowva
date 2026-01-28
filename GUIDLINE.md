@@ -6,11 +6,11 @@
 
 Để đạt hiệu quả cao nhất, đừng dùng một con AI cho tất cả mọi việc. Hãy chia việc theo sở trường:
 
-| Vị trí                                                   | Model Khuyên Dùng                                        | Lý do & Nhiệm vụ                                                                                                                                                                                    |
-| :--------------------------------------------------------- | :--------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend & Logic** <br />*(Node.js, Prisma)*      | **Claude 4.5 Sonnet** (Anthropic)                    | **Vua Logic.** Dùng để viết `Services`, thiết kế `Schema Prisma`, xử lý thuật toán phức tạp. Nó tuân thủ kiến trúc file chặt chẽ nhất và ít bịa code.                 |
-| **Frontend & UI** <br /> *(React 19, Tailwind v4)* | **GPT-5** (OpenAI) <br />hoặc **v0** (Vercel) | **Vua Sáng Tạo.** GPT-5 hiểu ngữ cảnh UI/UX cực tốt. Dùng để chuyển design sang code, chỉnh sửa CSS, animation. Dùng v0 để generate nhanh component từ prompt.                  |
-| **Debug & Research** <br /> *(Fix lỗi, Search)*  | **Gemini 3 Pro** (Google)                            | **Vua Context.** Với cửa sổ context khổng lồ, hãy ném *toàn bộ* folder `src` vào khi gặp lỗi khó hiểu. Nó có thể search web thời gian thực để fix lỗi thư viện mới. |
+| Vị trí                                             | Model Khuyên Dùng                             | Lý do & Nhiệm vụ                                                                                                                                                    |
+| :------------------------------------------------- | :-------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Backend & Logic** <br />_(Node.js, Prisma)_      | **Claude 4.5 Sonnet** (Anthropic)             | **Vua Logic.** Dùng để viết `Services`, thiết kế `Schema Prisma`, xử lý thuật toán phức tạp. Nó tuân thủ kiến trúc file chặt chẽ nhất và ít bịa code.               |
+| **Frontend & UI** <br /> _(React 19, Tailwind v4)_ | **GPT-5** (OpenAI) <br />hoặc **v0** (Vercel) | **Vua Sáng Tạo.** GPT-5 hiểu ngữ cảnh UI/UX cực tốt. Dùng để chuyển design sang code, chỉnh sửa CSS, animation. Dùng v0 để generate nhanh component từ prompt.      |
+| **Debug & Research** <br /> *(Fix lỗi, Search)*    | **Gemini 3 Pro** (Google)                     | **Vua Context.** Với cửa sổ context khổng lồ, hãy ném _toàn bộ_ folder `src` vào khi gặp lỗi khó hiểu. Nó có thể search web thời gian thực để fix lỗi thư viện mới. |
 
 ---
 
@@ -39,7 +39,7 @@ AI code sai thường do thiếu thông tin. Để code chạy ngay lần đầu
 
 ### 🐛 Kịch bản 3: Fix lỗi (Debug)
 
-> **Gửi kèm:** Nội dung lỗi + File đang lỗi +  **File gọi đến nó** .
+> **Gửi kèm:** Nội dung lỗi + File đang lỗi + **File gọi đến nó** .
 >
 > **Ví dụ:** Lỗi ở `TaskCard.tsx`, hãy gửi kèm cả `TaskList.tsx` (component cha) để AI biết data được truyền xuống như thế nào.
 
@@ -49,7 +49,7 @@ AI code sai thường do thiếu thông tin. Để code chạy ngay lần đầu
 
 Copy các mẫu prompt này để đảm bảo AI code đúng Tech Stack mới nhất.
 
-**Lưu ý:** File `README.md` đóng vai trò là  **"Tấm Bản Đồ"** cần thiết gửi **1 lần duy nhất** lúc bắt đầu đoạn chat mới.
+**Lưu ý:** File `README.md` đóng vai trò là **"Tấm Bản Đồ"** cần thiết gửi **1 lần duy nhất** lúc bắt đầu đoạn chat mới.
 
 ### ➤ Prompt cho Frontend (Tailwind v4 Focus)
 
@@ -99,5 +99,4 @@ AI vẫn nhớ kiến thức cũ (2023-2024). Hãy coi chừng những lỗi sau
 
 **✅ Cách sửa:**
 
-Quát nó ngay: *"Dừng lại. Dự án này dùng Server Actions, không dùng API Routes hay Axios. Quên kiến thức cũ đi."*
-
+Quát nó ngay: _"Dừng lại. Dự án này dùng Server Actions, không dùng API Routes hay Axios. Quên kiến thức cũ đi."_

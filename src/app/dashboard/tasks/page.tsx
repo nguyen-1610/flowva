@@ -20,9 +20,9 @@ export default async function TasksPage({
   const tasks = await getTasks();
 
   return (
-    <div className="flex h-screen w-screen bg-slate-100 overflow-hidden">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-100">
       <Sidebar currentView={view === 'backlog' ? ViewType.BACKLOG : ViewType.KANBAN} />
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative shadow-xl">
+      <main className="relative flex h-full flex-1 flex-col overflow-hidden shadow-xl">
         {view === 'backlog' ? <BacklogView tasks={tasks} /> : <KanbanBoard tasks={tasks} />}
       </main>
     </div>

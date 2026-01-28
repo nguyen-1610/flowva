@@ -13,7 +13,7 @@ graph TD
     subgraph FE ["Frontend (Client Side)"]
         direction TB
         UI["UI Components<br/>(src/frontend/features/*/components)"]
-        
+
         %% Client Logic bây giờ đơn giản hơn, chủ yếu là Form & Event
         subgraph ClientLogic ["Client Logic"]
             AuthHook["Auth Client<br/>(Supabase SDK)"]
@@ -31,9 +31,9 @@ graph TD
     %% --- BACKEND / SERVER CONTEXT (THE BIG CHANGE) ---
     subgraph Server ["Next.js Server Environment (src/)"]
         direction TB
-        
+
         Middleware["Middleware<br/>(middleware.ts)"]
-        
+
         %% Hai điểm tiếp nhận request chính của Next.js 16
         subgraph EntryPoints ["Server Entry Points"]
             RSC["Server Components (RSC)<br/>(src/app/page.tsx)"]
@@ -72,7 +72,7 @@ graph TD
     Contract -.-> S_Action
     Contract -.-> Service
     Contract -.-> UI
-    
+
     %% STYLING
     classDef fe fill:#BBDEFB,stroke:#0D47A1,stroke-width:2px,color:#000000;
     classDef server fill:#C8E6C9,stroke:#1B5E20,stroke-width:2px,color:#000000;
@@ -88,19 +88,23 @@ graph TD
 ## 🧩 Key Concepts
 
 ### 1. Frontend (Client Components)
+
 - **UI Components**: Located in `src/frontend/features/[feature]/components`.
 - **Client Logic**: Minimal logic, primarily form handling and calling Server Actions.
 - **Auth**: Uses Supabase Client SDK for direct authentication.
 
 ### 2. Server Entries
+
 - **Server Components (RSC)**: Fetch data directly via Services during initial render (`page.tsx`).
 - **Server Actions**: Handle mutations (POST/PUT/DELETE) invoked by client events. Located in `src/actions` or feature folders.
 
 ### 3. Backend Logic (Pure Server)
+
 - **Service Layer**: Contains all business logic and authorization checks. Located in `src/backend/services`.
 - **Prisma Client**: Direct database access, only called by the Service Layer.
 
 ### 4. Data Flow
+
 1. **User Interaction** triggers a Form or Event.
 2. **Server Action** is invoked directly (`use server`).
 3. **Service Layer** processes the request.

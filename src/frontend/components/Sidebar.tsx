@@ -2,18 +2,18 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { 
-  Layout, 
-  Kanban, 
-  Calendar, 
-  MessageSquare, 
-  Settings, 
-  Plus, 
+import {
+  Layout,
+  Kanban,
+  Calendar,
+  MessageSquare,
+  Settings,
+  Plus,
   ChevronDown,
   Layers,
   ChevronLeft,
   ChevronRight,
-  ListTodo
+  ListTodo,
 } from 'lucide-react';
 import { ViewType } from '@/shared/types/ui';
 
@@ -80,24 +80,28 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
   ];
 
   return (
-    <div 
-      className={`${isCollapsed ? 'w-20' : 'w-64'} bg-slate-50 border-r border-slate-200 h-screen flex flex-col flex-shrink-0 sticky top-0 transition-all duration-300 relative z-20`}
+    <div
+      className={`${isCollapsed ? 'w-20' : 'w-64'} relative sticky top-0 z-20 flex h-screen flex-shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300`}
     >
       {/* Collapse Toggle Button */}
-      <button 
+      <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-20 bg-white border border-slate-200 rounded-full p-1 shadow-sm hover:bg-slate-100 text-slate-500 z-50"
+        className="absolute top-20 -right-3 z-50 rounded-full border border-slate-200 bg-white p-1 text-slate-500 shadow-sm hover:bg-slate-100"
       >
         {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
       </button>
 
       {/* App Header */}
-      <div className={`h-16 flex items-center ${isCollapsed ? 'justify-center px-0' : 'px-6'} border-b border-slate-200 transition-all duration-300`}>
+      <div
+        className={`flex h-16 items-center ${isCollapsed ? 'justify-center px-0' : 'px-6'} border-b border-slate-200 transition-all duration-300`}
+      >
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-8 h-8 flex-shrink-0 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white">
             F
           </div>
-          <span className={`text-xl font-bold text-slate-800 tracking-tight whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+          <span
+            className={`text-xl font-bold tracking-tight whitespace-nowrap text-slate-800 transition-opacity duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}
+          >
             Flowva
           </span>
         </div>
@@ -105,26 +109,30 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
 
       {/* Project Selector (Jira style) */}
       <div className={`py-4 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'} py-2 rounded-md hover:bg-slate-200 cursor-pointer transition-colors group relative`}>
+        <div
+          className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'} group relative cursor-pointer rounded-md py-2 transition-colors hover:bg-slate-200`}
+        >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded flex items-center justify-center flex-shrink-0">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-blue-100 text-blue-600">
               <Layers size={18} />
             </div>
             {!isCollapsed && (
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-slate-700 truncate w-32">Project Alpha</p>
-                <p className="text-xs text-slate-500 truncate">Software Dev</p>
+                <p className="w-32 truncate text-sm font-semibold text-slate-700">Project Alpha</p>
+                <p className="truncate text-xs text-slate-500">Software Dev</p>
               </div>
             )}
           </div>
-          {!isCollapsed && <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600" />}
+          {!isCollapsed && (
+            <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600" />
+          )}
         </div>
       </div>
 
       {/* Main Navigation */}
-      <div className="flex-1 overflow-y-auto px-3 py-2 scrollbar-hide">
+      <div className="scrollbar-hide flex-1 overflow-y-auto px-3 py-2">
         {!isCollapsed && (
-          <div className="mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 transition-opacity">
+          <div className="mb-2 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase transition-opacity">
             Planning
           </div>
         )}
@@ -136,13 +144,16 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
                 key={item.id}
                 onClick={() => handleViewChange(item.id)}
                 title={isCollapsed ? item.label : ''}
-                className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'} py-2.5 rounded-md text-sm font-medium transition-all ${
+                className={`flex w-full items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'} rounded-md py-2.5 text-sm font-medium transition-all ${
                   activeView === item.id
                     ? 'bg-blue-50 text-blue-700'
                     : 'text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                <Icon size={18} className={activeView === item.id ? 'text-blue-600' : 'text-slate-500'} />
+                <Icon
+                  size={18}
+                  className={activeView === item.id ? 'text-blue-600' : 'text-slate-500'}
+                />
                 {!isCollapsed && <span className="truncate">{item.label}</span>}
               </button>
             );
@@ -151,51 +162,59 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
 
         {!isCollapsed ? (
           <>
-            <div className="mt-8 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 flex justify-between items-center">
+            <div className="mt-8 mb-2 flex items-center justify-between px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
               <span>Your Teams</span>
               <Plus size={14} className="cursor-pointer hover:text-slate-600" />
             </div>
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-600 hover:bg-slate-200">
-                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-200">
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
                 Marketing Team
               </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-600 hover:bg-slate-200">
-                <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+              <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-200">
+                <div className="h-2 w-2 rounded-full bg-purple-500"></div>
                 Design Crew
               </button>
             </div>
           </>
         ) : (
           <div className="mt-6 flex flex-col items-center gap-3">
-             <div className="w-10 h-1 border-t border-slate-200 mb-2"></div>
-             <div className="w-2 h-2 rounded-full bg-green-500" title="Marketing Team"></div>
-             <div className="w-2 h-2 rounded-full bg-purple-500" title="Design Crew"></div>
-             <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 cursor-pointer mt-1">
-               <Plus size={12} />
-             </div>
+            <div className="mb-2 h-1 w-10 border-t border-slate-200"></div>
+            <div className="h-2 w-2 rounded-full bg-green-500" title="Marketing Team"></div>
+            <div className="h-2 w-2 rounded-full bg-purple-500" title="Design Crew"></div>
+            <div className="mt-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-slate-200">
+              <Plus size={12} />
+            </div>
           </div>
         )}
       </div>
 
       {/* Bottom Actions */}
-      <div className={`p-4 border-t border-slate-200 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
-        <button 
+      <div
+        className={`border-t border-slate-200 p-4 ${isCollapsed ? 'flex flex-col items-center' : ''}`}
+      >
+        <button
           onClick={() => handleViewChange(ViewType.SETTINGS)}
           title="Settings"
-          className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 px-3'} py-2 rounded-md text-sm font-medium ${
-            activeView === ViewType.SETTINGS ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-200'
+          className={`flex w-full items-center ${isCollapsed ? 'justify-center' : 'gap-3 px-3'} rounded-md py-2 text-sm font-medium ${
+            activeView === ViewType.SETTINGS
+              ? 'bg-blue-50 text-blue-700'
+              : 'text-slate-600 hover:bg-slate-200'
           }`}
         >
           <Settings size={18} />
           {!isCollapsed && <span>Settings</span>}
         </button>
         <div className={`mt-4 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 px-3'}`}>
-          <img src="https://picsum.photos/100/100" alt="User" className="w-8 h-8 rounded-full border border-white shadow-sm" />
+          <img
+            src="https://picsum.photos/100/100"
+            alt="User"
+            className="h-8 w-8 rounded-full border border-white shadow-sm"
+          />
           {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-700 truncate">Alex Designer</p>
-              <p className="text-xs text-slate-500 truncate">Online</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-slate-700">Alex Designer</p>
+              <p className="truncate text-xs text-slate-500">Online</p>
             </div>
           )}
         </div>

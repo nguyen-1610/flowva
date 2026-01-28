@@ -3,7 +3,7 @@ export enum TaskStatus {
   TODO = 'TODO',
   IN_PROGRESS = 'IN_PROGRESS',
   REVIEW = 'REVIEW',
-  DONE = 'DONE'
+  DONE = 'DONE',
 }
 
 export enum ViewType {
@@ -12,7 +12,7 @@ export enum ViewType {
   KANBAN = 'KANBAN',
   CALENDAR = 'CALENDAR',
   CHAT = 'CHAT',
-  SETTINGS = 'SETTINGS'
+  SETTINGS = 'SETTINGS',
 }
 
 export interface User {

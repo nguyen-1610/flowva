@@ -1,0 +1,8 @@
+.next
+node_modules
+dist
+public
+.env
+.env*.local
+build
+coverage
