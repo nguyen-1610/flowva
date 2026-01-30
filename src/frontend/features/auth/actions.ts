@@ -33,7 +33,7 @@ export async function login(prevState: any, formData: FormData): Promise<AuthRes
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  redirect('/');
 }
 
 export async function signup(prevState: any, formData: FormData): Promise<AuthResponse> {
@@ -81,7 +81,7 @@ export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
-  redirect('/login');
+  redirect('/');
 }
 
 export async function loginWithGoogle() {
@@ -89,7 +89,7 @@ export async function loginWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/callback?next=/`,
     },
   });
 
