@@ -3,6 +3,7 @@
 import React from 'react';
 import { MoreHorizontal, Plus, Calendar, MessageSquare, Paperclip } from 'lucide-react';
 import { Task, TaskStatus, User } from '@/shared/types/ui-types';
+import { cn } from '@/frontend/lib/utils';
 
 const mockUsers: User[] = [
   { id: '1', name: 'Alice', avatar: 'https://picsum.photos/32/32?random=1' },
@@ -19,6 +20,7 @@ const mockTasks: Task[] = [
     dueDate: 'Tomorrow',
     priority: 'High',
     tag: 'Design',
+    sprint: 'Sprint 24',
   },
   {
     id: 't2',
@@ -28,6 +30,7 @@ const mockTasks: Task[] = [
     dueDate: 'Oct 24',
     priority: 'Medium',
     tag: 'Backend',
+    sprint: 'Sprint 24',
   },
   {
     id: 't3',
@@ -37,6 +40,7 @@ const mockTasks: Task[] = [
     dueDate: 'Next Week',
     priority: 'Low',
     tag: 'Docs',
+    sprint: 'Sprint 24',
   },
   {
     id: 't4',
@@ -46,6 +50,7 @@ const mockTasks: Task[] = [
     dueDate: 'Today',
     priority: 'High',
     tag: 'Bug',
+    sprint: 'Sprint 24',
   },
   {
     id: 't5',
@@ -55,14 +60,11 @@ const mockTasks: Task[] = [
     dueDate: 'Oct 20',
     priority: 'Medium',
     tag: 'DevOps',
+    sprint: 'Sprint 24',
   },
 ];
 
-interface KanbanBoardProps {
-  tasks?: Task[];
-}
-
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks = mockTasks }) => {
+const KanbanBoard: React.FC = () => {
   const columns = [
     { id: TaskStatus.TODO, title: 'To Do', color: 'bg-slate-100 border-t-4 border-slate-400' },
     {
@@ -95,7 +97,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks = mockTasks }) => {
               +2
             </div>
           </div>
-          <button className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700">
+          <button className="flex cursor-pointer items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700">
             <Plus size={16} /> New Issue
           </button>
         </div>
@@ -103,45 +105,49 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks = mockTasks }) => {
 
       <div className="flex h-[calc(100%-80px)] gap-6 pb-4">
         {columns.map((col) => {
-          const columnTasks = tasks.filter((t) => t.status === col.id);
+          const tasks = mockTasks.filter((t) => t.status === col.id);
           return (
             <div
               key={col.id}
               className="flex h-full w-80 flex-shrink-0 flex-col rounded-lg border border-slate-200 bg-slate-50/80"
             >
               <div
-                className={`flex items-center justify-between rounded-t-lg p-3 ${col.color.split(' ')[2]} border-t-4 bg-white shadow-sm`}
+                className={cn(
+                  'flex items-center justify-between rounded-t-lg border-t-4 bg-white p-3 shadow-sm',
+                  col.color.split(' ').slice(1).join(' '),
+                )}
               >
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-700">
                   {col.title}
                   <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                    {columnTasks.length}
+                    {tasks.length}
                   </span>
                 </h3>
-                <button className="text-slate-400 hover:text-slate-600">
+                <button className="cursor-pointer text-slate-400 hover:text-slate-600">
                   <MoreHorizontal size={16} />
                 </button>
               </div>
 
               <div className="flex-1 space-y-3 overflow-y-auto p-3">
-                {columnTasks.map((task) => (
+                {tasks.map((task) => (
                   <div
                     key={task.id}
                     className="group cursor-pointer rounded-md border border-slate-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
                   >
                     <div className="mb-2 flex items-start justify-between">
                       <span
-                        className={`rounded px-2 py-1 text-xs font-medium ${
+                        className={cn(
+                          'rounded px-2 py-1 text-xs font-medium',
                           task.priority === 'High'
                             ? 'bg-red-50 text-red-600'
                             : task.priority === 'Medium'
                               ? 'bg-orange-50 text-orange-600'
-                              : 'bg-blue-50 text-blue-600'
-                        }`}
+                              : 'bg-blue-50 text-blue-600',
+                        )}
                       >
                         {task.tag}
                       </span>
-                      <button className="text-slate-300 opacity-0 group-hover:opacity-100 hover:text-slate-500">
+                      <button className="cursor-pointer text-slate-300 opacity-0 group-hover:opacity-100 hover:text-slate-500">
                         <MoreHorizontal size={14} />
                       </button>
                     </div>
@@ -184,7 +190,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks = mockTasks }) => {
                   </div>
                 ))}
 
-                <button className="flex w-full items-center justify-center gap-2 rounded border border-dashed border-slate-300 py-2 text-sm text-slate-500 transition-colors hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600">
+                <button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded border border-dashed border-slate-300 py-2 text-sm text-slate-500 transition-colors hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600">
                   <Plus size={14} /> Create Task
                 </button>
               </div>

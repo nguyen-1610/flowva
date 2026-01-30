@@ -3,6 +3,7 @@
 import React from 'react';
 import { Plus, ChevronDown, MoreHorizontal, User as UserIcon, GripVertical } from 'lucide-react';
 import { Task, TaskStatus } from '@/shared/types/ui-types';
+import { cn } from '@/frontend/lib/utils';
 
 const mockBacklogTasks: Task[] = [
   {
@@ -67,13 +68,9 @@ const mockBacklogTasks: Task[] = [
   },
 ];
 
-interface BacklogViewProps {
-  tasks?: Task[];
-}
-
-const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) => {
-  const sprintTasks = tasks.filter((t) => t.sprint === 'Sprint 24');
-  const backlogTasks = tasks.filter((t) => t.sprint === 'Backlog');
+const BacklogView: React.FC = () => {
+  const sprintTasks = mockBacklogTasks.filter((t) => t.sprint === 'Sprint 24');
+  const backlogTasks = mockBacklogTasks.filter((t) => t.sprint === 'Backlog');
 
   const renderTaskRow = (task: Task) => (
     <div
@@ -85,22 +82,24 @@ const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) =
         className="cursor-move text-slate-300 opacity-0 group-hover:opacity-100"
       />
       <div
-        className={`flex h-4 w-4 items-center justify-center rounded border shadow-sm ${
+        className={cn(
+          'flex h-4 w-4 items-center justify-center rounded border shadow-sm',
           task.priority === 'High'
             ? 'border-red-200 bg-red-50'
             : task.priority === 'Medium'
               ? 'border-orange-200 bg-orange-50'
-              : 'border-blue-200 bg-blue-50'
-        }`}
+              : 'border-blue-200 bg-blue-50',
+        )}
       >
         <div
-          className={`h-2 w-2 rounded-full ${
+          className={cn(
+            'h-2 w-2 rounded-full',
             task.priority === 'High'
               ? 'bg-red-500'
               : task.priority === 'Medium'
                 ? 'bg-orange-500'
-                : 'bg-blue-500'
-          }`}
+                : 'bg-blue-500',
+          )}
         ></div>
       </div>
       <div className="min-w-0 flex-1">
@@ -119,15 +118,16 @@ const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) =
           </div>
         </div>
 
-        <div className="w-20 text-right">
+        <div className="w-28 text-center">
           <span
-            className={`rounded-full px-2 py-1 text-xs font-semibold ${
+            className={cn(
+              'inline-block rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap',
               task.status === 'DONE'
                 ? 'bg-green-100 text-green-700'
                 : task.status === 'IN_PROGRESS'
                   ? 'bg-blue-100 text-blue-700'
-                  : 'bg-slate-100 text-slate-600'
-            }`}
+                  : 'bg-slate-100 text-slate-600',
+            )}
           >
             {task.status.replace('_', ' ')}
           </span>
@@ -148,10 +148,10 @@ const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) =
           <p className="mt-1 text-sm text-slate-500">Project Alpha</p>
         </div>
         <div className="flex gap-2">
-          <button className="rounded-md bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200">
+          <button className="cursor-pointer rounded-md bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200">
             Insights
           </button>
-          <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+          <button className="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700">
             Complete Sprint
           </button>
         </div>
@@ -169,7 +169,7 @@ const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) =
             <span className="rounded bg-slate-200 px-2 py-1 text-xs font-medium text-slate-600">
               Oct 10 - Oct 24
             </span>
-            <button className="rounded p-1 hover:bg-slate-200">
+            <button className="cursor-pointer rounded p-1 hover:bg-slate-200">
               <MoreHorizontal size={16} className="text-slate-500" />
             </button>
           </div>
@@ -193,7 +193,7 @@ const BacklogView: React.FC<BacklogViewProps> = ({ tasks = mockBacklogTasks }) =
             <h3 className="text-sm font-bold text-slate-700">Backlog</h3>
             <span className="text-xs font-medium text-slate-400">{backlogTasks.length} issues</span>
           </div>
-          <button className="rounded bg-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-300">
+          <button className="cursor-pointer rounded bg-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-300">
             Create Sprint
           </button>
         </div>

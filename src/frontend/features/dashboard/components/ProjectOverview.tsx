@@ -2,58 +2,42 @@
 
 import React from 'react';
 import { TrendingUp, Users, CheckCircle, AlertCircle } from 'lucide-react';
-import { User } from '@/shared/types/ui-types';
+import { cn } from '@/frontend/lib/utils';
 
-interface DashboardProps {
-  stats: {
-    totalTasks: number;
-    inProgress: number;
-    urgent: number;
-    teamMembers: number;
-  };
-  user: User;
+interface ProjectOverviewProps {
+  user?: { name: string; avatar?: string };
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
-  const statsDisplay = [
+const ProjectOverview: React.FC<ProjectOverviewProps> = ({ user }) => {
+  const stats = [
     {
       label: 'Total Tasks',
-      value: stats.totalTasks.toString(),
+      value: '42',
       icon: CheckCircle,
       color: 'text-blue-600',
       bg: 'bg-blue-100',
     },
     {
       label: 'In Progress',
-      value: stats.inProgress.toString(),
+      value: '12',
       icon: TrendingUp,
       color: 'text-purple-600',
       bg: 'bg-purple-100',
     },
-    {
-      label: 'Urgent',
-      value: stats.urgent.toString(),
-      icon: AlertCircle,
-      color: 'text-red-600',
-      bg: 'bg-red-100',
-    },
-    {
-      label: 'Team Members',
-      value: stats.teamMembers.toString(),
-      icon: Users,
-      color: 'text-green-600',
-      bg: 'bg-green-100',
-    },
+    { label: 'Urgent', value: '3', icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-100' },
+    { label: 'Team Members', value: '8', icon: Users, color: 'text-green-600', bg: 'bg-green-100' },
   ];
 
   return (
     <div className="h-full flex-1 overflow-y-auto bg-white p-8">
-      <h1 className="mb-2 text-3xl font-bold text-slate-800">Good Morning, {user.name}! 👋</h1>
-      <p className="mb-8 text-slate-500">Here is what's happening with Project Alpha today.</p>
+      <h1 className="mb-2 text-3xl font-bold text-slate-800">
+        Good Morning, {user?.name || 'User'}! 👋
+      </h1>
+      <p className="mb-8 text-slate-500">Here is what&apos;s happening with Project Alpha today.</p>
 
       {/* Stats Grid */}
       <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {statsDisplay.map((stat, idx) => {
+        {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
             <div
@@ -61,7 +45,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
               className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="mb-4 flex items-center justify-between">
-                <div className={`${stat.bg} rounded-lg p-3`}>
+                <div className={cn(stat.bg, 'rounded-lg p-3')}>
                   <Icon size={24} className={stat.color} />
                 </div>
                 <span className="text-2xl font-bold text-slate-800">{stat.value}</span>
@@ -85,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
                 <img
                   src={`https://picsum.photos/32/32?random=${i}`}
                   className="h-8 w-8 rounded-full"
-                  alt={`User ${i}`}
+                  alt="User Avatar"
                 />
                 <div>
                   <p className="text-sm text-slate-800">
@@ -108,7 +92,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
           <p className="mb-6 text-sm text-indigo-100">
             75% of tasks completed for the upcoming Sprint release.
           </p>
-          <button className="w-full rounded-lg bg-white py-2 font-semibold text-indigo-700 transition-colors hover:bg-indigo-50">
+          <button className="w-full cursor-pointer rounded-lg bg-white py-2 font-semibold text-indigo-700 transition-colors hover:bg-indigo-50">
             View Details
           </button>
         </div>
@@ -117,4 +101,4 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
   );
 };
 
-export default Dashboard;
+export default ProjectOverview;
