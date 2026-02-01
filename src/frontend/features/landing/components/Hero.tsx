@@ -88,13 +88,16 @@ const Hero: React.FC = () => {
                 <div className="grow border-t border-slate-200"></div>
               </div>
 
-              <form className="space-y-4" action="/signup">
+              <form className="space-y-4" action="/signup" method="GET">
                 <Input label="Work Email" type="email" placeholder="name@company.com" id="email" name="email" />
                 <Input label="Full Name" type="text" placeholder="Jane Doe" id="name" name="name" />
                 
-                <Link href="/signup" className="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-all shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2 group-hover:scale-[1.01]">
+                <button 
+                  type="submit" 
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-3 font-bold text-white shadow-md shadow-indigo-500/20 transition-all hover:bg-indigo-700 hover:scale-[1.01]"
+                >
                    Create Account <ArrowRight size={18} />
-                </Link>
+                </button>
               </form>
               
               <p className="text-center text-xs text-slate-400 mt-6 leading-relaxed">

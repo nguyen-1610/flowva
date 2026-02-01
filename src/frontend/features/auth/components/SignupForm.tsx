@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signup } from '@/frontend/features/auth/actions';
@@ -8,17 +8,27 @@ import { createClient } from '@/backend/lib/supabase/client';
 import { SignupSchema, type SignupInput } from '@/shared/types/auth';
 import { Loader2, Mail, Lock, User, AlertCircle, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export default function SignupForm() {
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
   const {
     register,
     handleSubmit,
     setError,
+    setValue,
     formState: { errors, isSubmitSuccessful },
   } = useForm<SignupInput>({
     resolver: zodResolver(SignupSchema),
   });
+
+  useEffect(() => {
+    const email = searchParams.get('email');
+    const name = searchParams.get('name');
+    if (email) setValue('email', email);
+    if (name) setValue('name', name);
+  }, [searchParams, setValue]);
 
   const onSubmit = (data: SignupInput) => {
     startTransition(async () => {
