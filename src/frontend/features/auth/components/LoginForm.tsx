@@ -3,7 +3,8 @@
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { login, loginWithGoogle } from '@/frontend/features/auth/actions';
+import { login } from '@/frontend/features/auth/actions';
+import { createClient } from '@/backend/lib/supabase/client';
 import { LoginSchema, type LoginInput } from '@/shared/types/auth';
 import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -32,8 +33,35 @@ export default function LoginForm() {
     });
   };
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle();
+  const handleGoogleLogin = async () => {
+    try {
+      const supabase = createClient();
+
+      const redirectUrl = `${window.location.origin}/callback`;
+      console.log('🚀 Starting Google OAuth, redirect:', redirectUrl);
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        console.error('❌ OAuth init error:', error);
+        setError('root', { message: error.message });
+        return;
+      }
+
+      console.log('✅ OAuth initialized:', data);
+    } catch (err: any) {
+      console.error('❌ Unexpected error:', err);
+      setError('root', { message: 'Lỗi khi đăng nhập với Google' });
+    }
   };
 
   return (

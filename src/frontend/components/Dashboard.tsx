@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { TrendingUp, Users, CheckCircle, AlertCircle } from 'lucide-react';
+import { User } from '@/shared/types/ui-types';
 
 interface DashboardProps {
   stats: {
@@ -10,9 +11,10 @@ interface DashboardProps {
     urgent: number;
     teamMembers: number;
   };
+  user: User;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
+const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
   const statsDisplay = [
     {
       label: 'Total Tasks',
@@ -46,7 +48,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
 
   return (
     <div className="h-full flex-1 overflow-y-auto bg-white p-8">
-      <h1 className="mb-2 text-3xl font-bold text-slate-800">Good Morning, Alex! 👋</h1>
+      <h1 className="mb-2 text-3xl font-bold text-slate-800">Good Morning, {user.name}! 👋</h1>
       <p className="mb-8 text-slate-500">Here is what's happening with Project Alpha today.</p>
 
       {/* Stats Grid */}
@@ -98,7 +100,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
           </div>
         </div>
 
-        <div className="rounded-xl bg-gradient-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
+        <div className="rounded-xl bg-linear-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
           <h2 className="mb-2 text-xl font-bold">Project Status</h2>
           <div className="mb-6 h-2 w-full rounded-full bg-white/20">
             <div className="h-2 w-[75%] rounded-full bg-white"></div>

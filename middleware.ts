@@ -1,8 +1,16 @@
-import { type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/backend/lib/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // Update session như bình thường
+  const response = await updateSession(request);
+  
+  // Fix CSP issues cho Google OAuth
+  // Remove CSP headers that might block Google OAuth
+  response.headers.delete('content-security-policy');
+  response.headers.delete('content-security-policy-report-only');
+  
+  return response;
 }
 
 export const config = {

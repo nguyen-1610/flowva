@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import {
   Layout,
@@ -14,16 +14,22 @@ import {
   ChevronLeft,
   ChevronRight,
   ListTodo,
+  LogOut,
+  Loader2,
 } from 'lucide-react';
-import { ViewType } from '@/shared/types/ui';
+import { ViewType, User } from '@/shared/types/ui-types';
+import { logout } from '@/frontend/features/auth/actions';
 
 interface SidebarProps {
   currentView?: ViewType | string;
   onChangeView?: (view: ViewType) => void;
+  user: User;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, user }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -79,9 +85,15 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
     { id: ViewType.CHAT, icon: MessageSquare, label: 'Team Chat' },
   ];
 
+  const handleLogout = async () => {
+    startTransition(async () => {
+      await logout();
+    });
+  };
+
   return (
     <div
-      className={`${isCollapsed ? 'w-20' : 'w-64'} relative sticky top-0 z-20 flex h-screen flex-shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300`}
+      className={`${isCollapsed ? 'w-20' : 'w-64'} relative top-0 z-20 flex h-screen shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300`}
     >
       {/* Collapse Toggle Button */}
       <button
@@ -96,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
         className={`flex h-16 items-center ${isCollapsed ? 'justify-center px-0' : 'px-6'} border-b border-slate-200 transition-all duration-300`}
       >
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white">
             F
           </div>
           <span
@@ -110,10 +122,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
       {/* Project Selector (Jira style) */}
       <div className={`py-4 ${isCollapsed ? 'px-2' : 'px-4'}`}>
         <div
-          className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'} group relative cursor-pointer rounded-md py-2 transition-colors hover:bg-slate-200`}
+          className={`group relative flex cursor-pointer items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'} rounded-md py-2 transition-colors hover:bg-slate-200`}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-blue-100 text-blue-600">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-blue-100 text-blue-600">
               <Layers size={18} />
             </div>
             {!isCollapsed && (
@@ -205,18 +217,39 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
           <Settings size={18} />
           {!isCollapsed && <span>Settings</span>}
         </button>
-        <div className={`mt-4 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 px-3'}`}>
-          <img
-            src="https://picsum.photos/100/100"
-            alt="User"
-            className="h-8 w-8 rounded-full border border-white shadow-sm"
-          />
-          {!isCollapsed && (
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-slate-700">Alex Designer</p>
-              <p className="truncate text-xs text-slate-500">Online</p>
+
+        {/* User Dropdown */}
+        <div className="relative mt-4 w-full">
+          {isDropdownOpen && (
+            <div
+              className={`absolute bottom-full mb-2 w-full rounded-lg border border-slate-200 bg-white p-2 shadow-lg ${isCollapsed ? 'left-1/2 -translate-x-1/2' : ''}`}
+            >
+              <button
+                onClick={handleLogout}
+                disabled={isPending}
+                className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+              >
+                {isPending ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} />}
+                {!isCollapsed && <span>{isPending ? 'Logging out...' : 'Log Out'}</span>}
+              </button>
             </div>
           )}
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={`flex w-full items-center rounded-md p-2 text-left transition-colors hover:bg-slate-200 ${isCollapsed ? 'justify-center' : ''}`}
+          >
+            <img
+              src={user.avatar || 'https://picsum.photos/100/100'}
+              alt={user.name}
+              className="h-8 w-8 shrink-0 rounded-full border border-white shadow-sm"
+            />
+            {!isCollapsed && (
+              <div className="min-w-0 flex-1 pl-3">
+                <p className="truncate text-sm font-medium text-slate-700">{user.name}</p>
+                <p className="truncate text-xs text-slate-500">Online</p>
+              </div>
+            )}
+          </button>
         </div>
       </div>
     </div>
