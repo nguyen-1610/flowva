@@ -43,7 +43,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
   return (
     <div
       className={cn(
-        'relative flex h-full flex-shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300',
+        'relative flex h-full shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300',
         isCollapsed ? 'w-20' : 'w-64',
       )}
     >

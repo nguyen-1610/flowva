@@ -83,11 +83,11 @@ const Pricing: React.FC = () => {
                 <p className={`mt-2 text-sm ${plan.highlight ? 'text-slate-400' : 'text-slate-500'}`}>{plan.description}</p>
               </div>
 
-              <div className="flex-grow">
+              <div className="grow">
                 <ul className="space-y-4">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center gap-3">
-                      <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
+                      <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
                         plan.highlight ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'
                       }`}>
                         <Check size={12} strokeWidth={3} />

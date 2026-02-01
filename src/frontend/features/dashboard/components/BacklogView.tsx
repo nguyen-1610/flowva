@@ -197,7 +197,7 @@ const BacklogView: React.FC = () => {
             Create Sprint
           </button>
         </div>
-        <div className="min-h-[100px]">
+        <div className="min-h-25">
           {backlogTasks.map(renderTaskRow)}
           <div className="cursor-text border-t border-slate-100 p-2 transition-colors hover:bg-slate-50">
             <div className="flex items-center gap-2 p-1 text-slate-500">

@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex h-full w-full overflow-hidden bg-slate-100">
       <Sidebar user={userData} />
-      <main className="relative mt-[-1px] ml-[-1px] flex h-full flex-1 flex-col overflow-hidden rounded-tl-2xl border-t border-l border-slate-200 bg-white shadow-xl">
+      <main className="relative -mt-px -ml-px flex h-full flex-1 flex-col overflow-hidden rounded-tl-2xl border-t border-l border-slate-200 bg-white shadow-xl">
         {/* The rounded-tl-2xl and borders mimic the "card" look from the template if sidebar is outside */}
         {/* Actually Sidebar is full height, main content is next to it. 
              Template style: Sidebar is flat, Content is "paper" if needed or flat.

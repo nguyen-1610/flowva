@@ -109,7 +109,7 @@ const KanbanBoard: React.FC = () => {
           return (
             <div
               key={col.id}
-              className="flex h-full w-80 flex-shrink-0 flex-col rounded-lg border border-slate-200 bg-slate-50/80"
+              className="flex h-full w-80 shrink-0 flex-col rounded-lg border border-slate-200 bg-slate-50/80"
             >
               <div
                 className={cn(
@@ -199,7 +199,7 @@ const KanbanBoard: React.FC = () => {
         })}
 
         {/* "Blank Board" placeholder/add column */}
-        <div className="flex h-full w-80 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-200 text-slate-400 transition-colors hover:border-slate-300 hover:text-slate-600">
+        <div className="flex h-full w-80 shrink-0 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-200 text-slate-400 transition-colors hover:border-slate-300 hover:text-slate-600">
           <div className="text-center">
             <Plus size={32} className="mx-auto mb-2" />
             <span className="font-medium">Add Section</span>

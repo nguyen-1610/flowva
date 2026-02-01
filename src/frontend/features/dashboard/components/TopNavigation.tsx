@@ -54,11 +54,11 @@ const TopNavigation: React.FC<{ user?: { name: string; email: string; avatar: st
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 flex-shrink-0 items-center border-b border-slate-200 bg-white px-4 shadow-sm">
+    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center border-b border-slate-200 bg-white px-4 shadow-sm">
       {/* LEFT: Brand */}
       <Link
         href="/dashboard"
-        className="mr-2 flex flex-shrink-0 cursor-pointer items-center gap-2 lg:mr-4 lg:w-48 lg:pl-2"
+        className="mr-2 flex shrink-0 cursor-pointer items-center gap-2 lg:mr-4 lg:w-48 lg:pl-2"
       >
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white shadow-sm">
           F
@@ -111,7 +111,7 @@ const TopNavigation: React.FC<{ user?: { name: string; email: string; avatar: st
       </div>
 
       {/* RIGHT: Project, Notifications, Profile */}
-      <div className="ml-auto flex w-auto flex-shrink-0 items-center justify-end gap-2 sm:ml-0 lg:gap-3">
+      <div className="ml-auto flex w-auto shrink-0 items-center justify-end gap-2 sm:ml-0 lg:gap-3">
         {/* Project Switcher */}
         <div className="mr-4 hidden cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 transition-colors hover:border-slate-300 hover:bg-white xl:flex">
           <div className="flex h-6 w-6 items-center justify-center rounded bg-blue-100 text-blue-600">

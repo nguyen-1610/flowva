@@ -4,9 +4,19 @@ import React from 'react';
 import Link from 'next/link';
 import Input from './Input';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
-import { loginWithGoogle } from '@/frontend/features/auth/actions';
+import { createClient } from '@/backend/lib/supabase/client';
 
 const Hero: React.FC = () => {
+  const handleGoogleLogin = async () => {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/callback?next=/projects`,
+      },
+    });
+  };
+
   return (
     <div className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden bg-white">
       {/* Abstract Background Blobs */}
@@ -30,7 +40,7 @@ const Hero: React.FC = () => {
             </div>
             
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
-              Orchestrate your team's <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">potential.</span>
+              Orchestrate your team's <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 to-purple-600">potential.</span>
             </h1>
             
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
@@ -51,7 +61,7 @@ const Hero: React.FC = () => {
           <div className="lg:col-span-5 w-full max-w-md mx-auto lg:mx-0">
             <div className="bg-white rounded-2xl shadow-2xl shadow-indigo-900/10 border border-slate-100 p-8 sm:p-10 relative overflow-hidden group">
                 
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 via-indigo-600 to-purple-600"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-indigo-400 via-indigo-600 to-purple-600"></div>
 
               <div className="mb-8 text-center">
                 <h3 className="text-2xl font-bold text-slate-900">Get started with Flowva</h3>
@@ -60,7 +70,7 @@ const Hero: React.FC = () => {
 
               {/* Google Button - The "Hero" of the form */}
               <button
-                onClick={() => loginWithGoogle()}
+                onClick={handleGoogleLogin}
                 className="w-full flex cursor-pointer items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md mb-6 group-focus:ring-2"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -73,9 +83,9 @@ const Hero: React.FC = () => {
               </button>
 
               <div className="relative flex py-2 items-center mb-6">
-                <div className="flex-grow border-t border-slate-200"></div>
-                <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-semibold uppercase">Or sign up with email</span>
-                <div className="flex-grow border-t border-slate-200"></div>
+                <div className="grow border-t border-slate-200"></div>
+                <span className="shrink-0 mx-4 text-slate-400 text-xs font-semibold uppercase">Or sign up with email</span>
+                <div className="grow border-t border-slate-200"></div>
               </div>
 
               <form className="space-y-4" action="/signup">

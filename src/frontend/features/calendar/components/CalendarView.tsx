@@ -108,7 +108,7 @@ const CalendarView: React.FC = () => {
         onToggleFilter={toggleFilter}
       />
 
-      <div className="relative mt-[-1px] ml-[-1px] flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-tl-2xl border-t border-l border-slate-200 bg-white p-6 shadow-sm">
+      <div className="relative -mt-px -ml-px flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-tl-2xl border-t border-l border-slate-200 bg-white p-6 shadow-sm">
         {/* Main Content Header */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-slate-500">
@@ -200,7 +200,7 @@ const CalendarView: React.FC = () => {
                 <div
                   key={idx}
                   className={cn(
-                    'group relative min-h-[100px] border-r border-b border-slate-100 p-2 transition-colors hover:bg-slate-50',
+                    'group relative min-h-25 border-r border-b border-slate-100 p-2 transition-colors hover:bg-slate-50',
                     idx % 7 === 0 ? 'border-l' : '',
                   )}
                 >

@@ -93,7 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, user }) =>
 
   return (
     <div
-      className={`${isCollapsed ? 'w-20' : 'w-64'} relative sticky top-0 z-20 flex h-screen flex-shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300`}
+      className={`${isCollapsed ? 'w-20' : 'w-64'} relative top-0 z-20 flex h-screen shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300`}
     >
       {/* Collapse Toggle Button */}
       <button
@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, user }) =>
         className={`flex h-16 items-center ${isCollapsed ? 'justify-center px-0' : 'px-6'} border-b border-slate-200 transition-all duration-300`}
       >
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white">
             F
           </div>
           <span
@@ -125,7 +125,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, user }) =>
           className={`group relative flex cursor-pointer items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'} rounded-md py-2 transition-colors hover:bg-slate-200`}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-blue-100 text-blue-600">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-blue-100 text-blue-600">
               <Layers size={18} />
             </div>
             {!isCollapsed && (
@@ -241,7 +241,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, user }) =>
             <img
               src={user.avatar || 'https://picsum.photos/100/100'}
               alt={user.name}
-              className="h-8 w-8 flex-shrink-0 rounded-full border border-white shadow-sm"
+              className="h-8 w-8 shrink-0 rounded-full border border-white shadow-sm"
             />
             {!isCollapsed && (
               <div className="min-w-0 flex-1 pl-3">

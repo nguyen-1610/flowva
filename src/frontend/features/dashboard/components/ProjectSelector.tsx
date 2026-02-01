@@ -10,7 +10,7 @@ interface ProjectSelectorProps {
 
 const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelectProject }) => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-blue-50 to-indigo-50 p-6">
       {/* Header / Nav simulation */}
       <div className="absolute top-0 left-0 flex w-full items-center justify-between p-6">
         <div className="flex items-center gap-2">

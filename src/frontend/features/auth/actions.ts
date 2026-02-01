@@ -25,15 +25,8 @@ export async function login(prevState: any, formData: FormData): Promise<AuthRes
     password,
   });
 
-  if (error) {
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-
   revalidatePath('/', 'layout');
-  redirect('/');
+  redirect('/projects');
 }
 
 export async function signup(prevState: any, formData: FormData): Promise<AuthResponse> {
@@ -81,24 +74,5 @@ export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
-  redirect('/');
-}
-
-export async function loginWithGoogle() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/callback?next=/`,
-    },
-  });
-
-  if (error) {
-    console.error('Google login error:', error);
-    redirect('/login?error=GoogleLoginFailed');
-  }
-
-  if (data.url) {
-    redirect(data.url);
-  }
+  redirect('/login');
 }

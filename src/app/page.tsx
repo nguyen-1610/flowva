@@ -1,17 +1,19 @@
 import React from 'react';
+import { redirect } from 'next/navigation';
 import LandingPage from '@/frontend/features/landing/components/LandingPage';
-import ProjectSelectorWrapper from '@/frontend/features/dashboard/components/ProjectSelectorWrapper';
 import { createClient } from '@/backend/lib/supabase/server';
 
 export default async function RootPage() {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!user) {
-    return <LandingPage />;
+  console.log('RootPage Session Check:', session ? 'Authenticated' : 'No Session');
+
+  if (session) {
+    redirect('/projects');
   }
 
-  return <ProjectSelectorWrapper />;
+  return <LandingPage />;
 }

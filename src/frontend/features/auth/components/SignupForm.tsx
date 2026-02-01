@@ -3,7 +3,8 @@
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signup, loginWithGoogle } from '@/frontend/features/auth/actions';
+import { signup } from '@/frontend/features/auth/actions';
+import { createClient } from '@/backend/lib/supabase/client';
 import { SignupSchema, type SignupInput } from '@/shared/types/auth';
 import { Loader2, Mail, Lock, User, AlertCircle, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
@@ -34,8 +35,35 @@ export default function SignupForm() {
     });
   };
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle();
+  const handleGoogleLogin = async () => {
+    try {
+      const supabase = createClient();
+
+      const redirectUrl = `${window.location.origin}/callback`;
+      console.log('🚀 Starting Google OAuth, redirect:', redirectUrl);
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        console.error('❌ OAuth init error:', error);
+        setError('root', { message: error.message });
+        return;
+      }
+
+      console.log('✅ OAuth initialized:', data);
+    } catch (err: any) {
+      console.error('❌ Unexpected error:', err);
+      setError('root', { message: 'Lỗi khi đăng nhập với Google' });
+    }
   };
 
   if (isSubmitSuccessful) {

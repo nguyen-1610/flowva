@@ -100,7 +100,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
           </div>
         </div>
 
-        <div className="rounded-xl bg-gradient-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
+        <div className="rounded-xl bg-linear-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
           <h2 className="mb-2 text-xl font-bold">Project Status</h2>
           <div className="mb-6 h-2 w-full rounded-full bg-white/20">
             <div className="h-2 w-[75%] rounded-full bg-white"></div>
