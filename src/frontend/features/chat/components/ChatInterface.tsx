@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 import { ChatThread, Message } from '@/shared/types/ui-types';
 import ChatSidebar from './ChatSidebar';
 import ChatArea from './ChatArea';
@@ -40,7 +41,7 @@ const ChatInterface: React.FC = () => {
       id: '3',
       name: 'Sarah Miller',
       type: 'direct',
-      avatar: 'https://picsum.photos/40/40?random=1',
+      avatar: getMockAvatar(1),
       lastMessage: 'Can you check my PR?',
       lastMessageTime: 'Yesterday',
       unreadCount: 0,
@@ -49,7 +50,7 @@ const ChatInterface: React.FC = () => {
       id: '4',
       name: 'John Doe',
       type: 'direct',
-      avatar: 'https://picsum.photos/40/40?random=2',
+      avatar: getMockAvatar(2),
       lastMessage: 'Thanks for the help!',
       lastMessageTime: 'Yesterday',
       unreadCount: 1,

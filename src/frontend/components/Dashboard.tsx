@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { TrendingUp, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { User } from '@/shared/types/ui-types';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 interface DashboardProps {
   stats: {
@@ -82,9 +84,11 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, user }) => {
                 key={i}
                 className="flex items-start gap-4 border-b border-slate-200 pb-4 last:border-0 last:pb-0"
               >
-                <img
-                  src={`https://picsum.photos/32/32?random=${i}`}
+                <Image
+                  src={getMockAvatar(i)}
                   className="h-8 w-8 rounded-full"
+                  width={32}
+                  height={32}
                   alt={`User ${i}`}
                 />
                 <div>

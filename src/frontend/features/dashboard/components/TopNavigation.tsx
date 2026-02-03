@@ -2,7 +2,9 @@
 
 import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 import {
   Search,
   Bell,
@@ -137,9 +139,11 @@ const TopNavigation: React.FC<{ user?: { name: string; email: string; avatar: st
             className={`ml-1 flex cursor-pointer items-center gap-2 rounded-full border p-1 pl-1 transition-colors ${isProfileOpen ? 'border-indigo-100 bg-indigo-50' : 'border-transparent hover:border-slate-200 hover:bg-slate-50'}`}
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
-            <img
-              src={user?.avatar || 'https://picsum.photos/100/100'}
+            <Image
+              src={user?.avatar || getMockAvatar(user?.name || 'User')}
               alt="Profile"
+              width={32}
+              height={32}
               className="h-8 w-8 rounded-full border border-slate-200"
             />
             <ChevronDown

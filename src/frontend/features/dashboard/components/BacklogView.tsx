@@ -3,6 +3,8 @@
 import React from 'react';
 import { Plus, ChevronDown, MoreHorizontal, User as UserIcon, GripVertical } from 'lucide-react';
 import { Task, TaskStatus } from '@/shared/types/ui-types';
+import { useTasks } from '@/frontend/features/tasks/hooks/useTasks';
+import { TaskBacklogSkeleton } from '@/frontend/features/tasks/components/TaskBacklogSkeleton';
 import { cn } from '@/frontend/lib/utils';
 
 const mockBacklogTasks: Task[] = [
@@ -69,8 +71,23 @@ const mockBacklogTasks: Task[] = [
 ];
 
 const BacklogView: React.FC = () => {
-  const sprintTasks = mockBacklogTasks.filter((t) => t.sprint === 'Sprint 24');
-  const backlogTasks = mockBacklogTasks.filter((t) => t.sprint === 'Backlog');
+  const { tasks: data, isLoading, isError } = useTasks();
+
+  const sprintTasks = data?.filter((t) => t.sprint === 'Sprint 24') || [];
+  const backlogTasks = data?.filter((t) => !t.sprint || t.sprint === 'Backlog') || [];
+
+  if (isLoading) return <TaskBacklogSkeleton />;
+
+  if (isError) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <h3 className="text-lg font-medium text-slate-900">Failed to load backlog</h3>
+          <p className="text-slate-500">Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderTaskRow = (task: Task) => (
     <div
@@ -109,12 +126,13 @@ const BacklogView: React.FC = () => {
 
       <div className="flex items-center gap-4 px-2">
         <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
-          {task.tag}
+          {task.tag || 'General'}
         </span>
 
         <div className="flex w-16 -space-x-1">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white bg-slate-200 text-slate-400">
-            <UserIcon size={12} />
+          {/* Mock Assignee UI */}
+          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white bg-slate-200 text-[10px] font-bold text-slate-500">
+            {task.assignees && task.assignees.length > 0 ? task.assignees[0].name.charAt(0) : '?'}
           </div>
         </div>
 
@@ -163,7 +181,9 @@ const BacklogView: React.FC = () => {
           <div className="flex items-center gap-2">
             <ChevronDown size={16} className="text-slate-500" />
             <h3 className="text-sm font-bold text-slate-700">Sprint 24</h3>
-            <span className="text-xs font-medium text-slate-400">(Active) • 3 issues</span>
+            <span className="text-xs font-medium text-slate-400">
+              (Active) • {sprintTasks.length} issues
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="rounded bg-slate-200 px-2 py-1 text-xs font-medium text-slate-600">

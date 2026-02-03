@@ -3,12 +3,15 @@
 import React from 'react';
 import { MoreHorizontal, Plus, Calendar, MessageSquare, Paperclip } from 'lucide-react';
 import { Task, TaskStatus, User } from '@/shared/types/ui-types';
+import { useTasks } from '@/frontend/features/tasks/hooks/useTasks';
+import { TaskBoardSkeleton } from '@/frontend/features/tasks/components/TaskBoardSkeleton';
 import { cn } from '@/frontend/lib/utils';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 const mockUsers: User[] = [
-  { id: '1', name: 'Alice', avatar: 'https://picsum.photos/32/32?random=1' },
-  { id: '2', name: 'Bob', avatar: 'https://picsum.photos/32/32?random=2' },
-  { id: '3', name: 'Charlie', avatar: 'https://picsum.photos/32/32?random=3' },
+  { id: '1', name: 'Alice', avatar: getMockAvatar(1) },
+  { id: '2', name: 'Bob', avatar: getMockAvatar(2) },
+  { id: '3', name: 'Charlie', avatar: getMockAvatar(3) },
 ];
 
 const mockTasks: Task[] = [
@@ -65,6 +68,8 @@ const mockTasks: Task[] = [
 ];
 
 const KanbanBoard: React.FC = () => {
+  const { tasks: data, isLoading, isError } = useTasks();
+
   const columns = [
     { id: TaskStatus.TODO, title: 'To Do', color: 'bg-slate-100 border-t-4 border-slate-400' },
     {
@@ -72,9 +77,23 @@ const KanbanBoard: React.FC = () => {
       title: 'In Progress',
       color: 'bg-blue-50 border-t-4 border-blue-500',
     },
-    { id: TaskStatus.REVIEW, title: 'Review', color: 'bg-purple-50 border-t-4 border-purple-500' },
     { id: TaskStatus.DONE, title: 'Done', color: 'bg-green-50 border-t-4 border-green-500' },
   ];
+
+  if (isLoading) return <TaskBoardSkeleton />;
+
+  if (isError) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <h3 className="text-lg font-medium text-slate-900">Failed to load tasks</h3>
+          <p className="text-slate-500">Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const tasks = data || [];
 
   return (
     <div className="h-full flex-1 overflow-x-auto overflow-y-hidden bg-white p-6">
@@ -105,7 +124,9 @@ const KanbanBoard: React.FC = () => {
 
       <div className="flex h-[calc(100%-80px)] gap-6 pb-4">
         {columns.map((col) => {
-          const tasks = mockTasks.filter((t) => t.status === col.id);
+          // Map backend status to UI col ID if needed, but here they match
+          const columnTasks = tasks.filter((t) => t.status === col.id);
+
           return (
             <div
               key={col.id}
@@ -120,7 +141,7 @@ const KanbanBoard: React.FC = () => {
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-700">
                   {col.title}
                   <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                    {tasks.length}
+                    {columnTasks.length}
                   </span>
                 </h3>
                 <button className="cursor-pointer text-slate-400 hover:text-slate-600">
@@ -129,7 +150,7 @@ const KanbanBoard: React.FC = () => {
               </div>
 
               <div className="flex-1 space-y-3 overflow-y-auto p-3">
-                {tasks.map((task) => (
+                {columnTasks.map((task) => (
                   <div
                     key={task.id}
                     className="group cursor-pointer rounded-md border border-slate-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
@@ -145,7 +166,7 @@ const KanbanBoard: React.FC = () => {
                               : 'bg-blue-50 text-blue-600',
                         )}
                       >
-                        {task.tag}
+                        {task.priority || 'NORMAL'}
                       </span>
                       <button className="cursor-pointer text-slate-300 opacity-0 group-hover:opacity-100 hover:text-slate-500">
                         <MoreHorizontal size={14} />
@@ -157,34 +178,17 @@ const KanbanBoard: React.FC = () => {
 
                     <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center gap-2 text-xs text-slate-400">
-                        {task.dueDate === 'Today' || task.dueDate === 'Tomorrow' ? (
-                          <span className="flex items-center gap-1 font-medium text-red-500">
-                            <Calendar size={12} /> {task.dueDate}
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1">
-                            <Calendar size={12} /> {task.dueDate}
-                          </span>
-                        )}
+                        <span className="flex items-center gap-1">
+                          <Calendar size={12} /> {task.dueDate || 'No Date'}
+                        </span>
                       </div>
                       <div className="flex -space-x-1">
-                        {task.assignees.map((u) => (
-                          <img
-                            key={u.id}
-                            src={u.avatar}
-                            alt={u.name}
-                            className="h-6 w-6 rounded-full border border-white"
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="mt-3 flex items-center gap-3 border-t border-slate-50 pt-3 text-slate-400">
-                      <div className="flex items-center gap-1 text-xs">
-                        <MessageSquare size={12} /> 2
-                      </div>
-                      <div className="flex items-center gap-1 text-xs">
-                        <Paperclip size={12} /> 1
+                        {/* Mock Assignee for now since API returns string assignee name, not object */}
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white bg-indigo-100 text-[10px] font-bold text-indigo-600">
+                          {task.assignees && task.assignees.length > 0
+                            ? task.assignees[0].name.charAt(0)
+                            : '?'}
+                        </div>
                       </div>
                     </div>
                   </div>

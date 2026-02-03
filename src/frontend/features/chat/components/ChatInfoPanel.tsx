@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import {
   Info,
   Users,
@@ -13,6 +14,7 @@ import {
   AtSign,
 } from 'lucide-react';
 import { cn } from '@/frontend/lib/utils';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 interface ChatInfoPanelProps {
   showRightSidebar: boolean;
@@ -195,9 +197,11 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
               >
                 <div className="mb-3 flex items-center gap-3">
                   <div className="relative">
-                    <img
-                      src={`https://picsum.photos/40/40?random=${member.id + 50}`}
+                    <Image
+                      src={getMockAvatar(member.id)}
                       alt={member.name}
+                      width={40}
+                      height={40}
                       className="h-10 w-10 rounded-full"
                     />
                     <div
@@ -293,10 +297,7 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
                       key={i}
                       className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg bg-slate-200"
                     >
-                      <img
-                        src={`https://picsum.photos/200/200?random=${i + 200}`}
-                        className="h-full w-full object-cover"
-                      />
+                      <Image src={getMockAvatar(i)} alt="Media" fill className="object-cover" />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
                         <Download className="text-white drop-shadow-md" size={20} />
                       </div>

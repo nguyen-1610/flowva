@@ -1,0 +1,111 @@
+import { Task, TaskStatus } from '@/shared/types/ui-types';
+
+// Simulated network delay
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export const getTasksMock = async (): Promise<Task[]> => {
+  await delay(0); // 1.5s delay to test Skeleton UI
+
+  return [
+    {
+      id: '1',
+      title: 'Design System',
+      status: TaskStatus.IN_PROGRESS,
+      priority: 'High',
+      assignees: [{ id: 'u1', name: 'Sarah Chen', avatar: '' }],
+      sprint: 'Sprint 24',
+      tag: 'Design',
+      dueDate: 'Tomorrow',
+    },
+    {
+      id: '2',
+      title: 'Setup Next.js',
+      status: TaskStatus.DONE,
+      priority: 'High',
+      assignees: [{ id: 'u2', name: 'You', avatar: '' }],
+      sprint: 'Sprint 24',
+      tag: 'Dev',
+      dueDate: 'Today',
+    },
+    {
+      id: '3',
+      title: 'Authentication Flow',
+      status: TaskStatus.TODO,
+      priority: 'Medium',
+      assignees: [],
+      sprint: 'Sprint 24',
+      tag: 'Auth',
+      dueDate: 'Next Week',
+    },
+    {
+      id: '4',
+      title: 'Database Schema',
+      status: TaskStatus.IN_PROGRESS,
+      priority: 'High',
+      assignees: [{ id: 'u3', name: 'Mike', avatar: '' }],
+      sprint: 'Sprint 24',
+      tag: 'Backend',
+      dueDate: 'Oct 25',
+    },
+    {
+      id: '5',
+      title: 'API Documentation',
+      status: TaskStatus.TODO,
+      priority: 'Low',
+      assignees: [],
+      sprint: 'Backlog',
+      tag: 'Docs',
+      dueDate: 'TBD',
+    },
+    {
+      id: '6',
+      title: 'Frontend Testing',
+      status: TaskStatus.TODO,
+      priority: 'Medium',
+      assignees: [],
+      sprint: 'Backlog',
+      tag: 'Testing',
+      dueDate: 'TBD',
+    },
+    {
+      id: '7',
+      title: 'CI/CD Pipeline',
+      status: TaskStatus.DONE,
+      priority: 'High',
+      assignees: [],
+      sprint: 'Sprint 24',
+      tag: 'DevOps',
+      dueDate: 'Yesterday',
+    },
+    {
+      id: '8',
+      title: 'User Profile Page',
+      status: TaskStatus.IN_PROGRESS,
+      priority: 'Medium',
+      assignees: [{ id: 'u2', name: 'You', avatar: '' }],
+      sprint: 'Sprint 24',
+      tag: 'Frontend',
+      dueDate: 'Oct 30',
+    },
+    {
+      id: '9',
+      title: 'Dark Mode Support',
+      status: TaskStatus.TODO,
+      priority: 'Low',
+      assignees: [],
+      sprint: 'Backlog',
+      tag: 'UI',
+      dueDate: 'TBD',
+    },
+    {
+      id: '10',
+      title: 'Mobile Responsiveness',
+      status: TaskStatus.IN_PROGRESS,
+      priority: 'High',
+      assignees: [],
+      sprint: 'Backlog',
+      tag: 'UI',
+      dueDate: 'Nov 1',
+    },
+  ];
+};

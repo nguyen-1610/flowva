@@ -1,10 +1,10 @@
 // src/app/auth-success/page.tsx
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function AuthSuccessPage() {
+function AuthSuccessContent() {
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/projects';
 
@@ -18,14 +18,28 @@ export default function AuthSuccessPage() {
   }, [next]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-6"></div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
-          Đăng nhập thành công!
-        </h2>
+        <div className="mx-auto mb-6 h-16 w-16 animate-spin rounded-full border-b-4 border-blue-600"></div>
+        <h2 className="mb-2 text-xl font-semibold text-gray-800">Đăng nhập thành công!</h2>
         <p className="text-gray-600">Đang chuyển hướng...</p>
       </div>
     </div>
+  );
+}
+
+export default function AuthSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <div className="mx-auto mb-6 h-16 w-16 animate-spin rounded-full border-b-4 border-blue-600"></div>
+          </div>
+        </div>
+      }
+    >
+      <AuthSuccessContent />
+    </Suspense>
   );
 }

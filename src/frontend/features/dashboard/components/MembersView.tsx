@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Mail, MoreHorizontal, Plus, Shield } from 'lucide-react';
 import { cn } from '@/frontend/lib/utils';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 const MembersView: React.FC = () => {
   const members = [
@@ -66,9 +68,11 @@ const MembersView: React.FC = () => {
               <tr key={member.id} className="group transition-colors hover:bg-slate-50/50">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={`https://picsum.photos/40/40?random=${member.id + 20}`}
+                    <Image
+                      src={getMockAvatar(member.id)}
                       alt={member.name}
+                      width={40}
+                      height={40}
                       className="h-10 w-10 rounded-full"
                     />
                     <div>

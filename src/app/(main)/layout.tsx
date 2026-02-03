@@ -2,6 +2,7 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/backend/lib/supabase/server';
 import TopNavigation from '@/frontend/features/dashboard/components/TopNavigation';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -16,7 +17,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   const userData = {
     name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
     email: user.email || '',
-    avatar: user.user_metadata?.avatar_url || 'https://picsum.photos/100/100',
+    avatar: user.user_metadata?.avatar_url || getMockAvatar(user.email || 'User'),
   };
 
   return (

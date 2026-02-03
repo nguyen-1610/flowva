@@ -14,10 +14,6 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com', // Để hiển thị avatar Google login
       },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos', // Để hiển thị ảnh mock từ components
-      },
     ],
   },
 };

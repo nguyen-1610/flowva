@@ -2,6 +2,8 @@
 
 import React, { useState, useTransition } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 import {
   Layout,
   Kanban,
@@ -238,9 +240,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, user }) =>
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className={`flex w-full items-center rounded-md p-2 text-left transition-colors hover:bg-slate-200 ${isCollapsed ? 'justify-center' : ''}`}
           >
-            <img
-              src={user.avatar || 'https://picsum.photos/100/100'}
+            <Image
+              src={user.avatar || getMockAvatar(user.name)}
               alt={user.name}
+              width={32}
+              height={32}
               className="h-8 w-8 shrink-0 rounded-full border border-white shadow-sm"
             />
             {!isCollapsed && (

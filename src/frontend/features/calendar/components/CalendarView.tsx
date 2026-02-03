@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Clock, Video, Plus, Info } from 'lucide-react';
 import CalendarSidebar from './CalendarSidebar';
 import { cn } from '@/frontend/lib/utils';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 const CalendarView: React.FC = () => {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -159,9 +161,12 @@ const CalendarView: React.FC = () => {
             </button>
             <div className="flex -space-x-2">
               {[1, 2, 3].map((i) => (
-                <img
+                <Image
                   key={i}
-                  src={`https://picsum.photos/32/32?random=${i + 10}`}
+                  src={getMockAvatar(i + 10)}
+                  alt="Team member"
+                  width={32}
+                  height={32}
                   className="h-8 w-8 rounded-full border-2 border-white"
                 />
               ))}

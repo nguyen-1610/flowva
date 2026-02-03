@@ -8,13 +8,11 @@ import ProjectSelectorWrapper from '@/frontend/features/dashboard/components/Pro
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  // ← FIX: Đổi getSession() sang getUser()
-  const { data: { user }, error } = await supabase.auth.getUser();
-
-  console.log('ProjectsPage: User check:', { hasUser: !!user, email: user?.email });
-
-  if (error || !user) {
+  if (!session) {
     redirect('/login');
   }
 

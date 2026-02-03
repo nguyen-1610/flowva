@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { TrendingUp, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { cn } from '@/frontend/lib/utils';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 interface ProjectOverviewProps {
   user?: { name: string; avatar?: string };
@@ -66,10 +68,12 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({ user }) => {
                 key={i}
                 className="flex items-start gap-4 border-b border-slate-200 pb-4 last:border-0 last:pb-0"
               >
-                <img
-                  src={`https://picsum.photos/32/32?random=${i}`}
-                  className="h-8 w-8 rounded-full"
+                <Image
+                  src={getMockAvatar(i)}
                   alt="User Avatar"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-full"
                 />
                 <div>
                   <p className="text-sm text-slate-800">

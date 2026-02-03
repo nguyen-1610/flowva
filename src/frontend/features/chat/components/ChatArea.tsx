@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import {
   Phone,
   Video,
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Message } from '@/shared/types/ui-types';
 import { cn } from '@/frontend/lib/utils';
+import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 interface ChatAreaProps {
   messages: Message[];
@@ -94,16 +96,20 @@ const ChatArea: React.FC<ChatAreaProps> = ({
               {/* Avatar */}
               <div className="w-10 shrink-0">
                 {showHeader && !isMe && (
-                  <img
-                    src="https://picsum.photos/40/40?random=101"
+                  <Image
+                    src={getMockAvatar(101)}
                     alt="Sarah"
+                    width={40}
+                    height={40}
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 )}
                 {showHeader && isMe && (
-                  <img
-                    src="https://picsum.photos/40/40?random=102"
+                  <Image
+                    src={getMockAvatar(102)}
                     alt="Me"
+                    width={40}
+                    height={40}
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 )}
