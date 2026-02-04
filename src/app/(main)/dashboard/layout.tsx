@@ -3,6 +3,8 @@ import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 import Sidebar from '@/frontend/features/dashboard/components/Sidebar';
 import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
+import { CurrentUser } from '@/shared/types/auth';
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -10,9 +12,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   } = await supabase.auth.getUser();
 
   // User check handled in parent layout, but data needed for Sidebar
-  const userData = user
+  const userData: CurrentUser | undefined = user
     ? {
+        id: user.id,
         name: user.user_metadata?.name || 'User',
+        email: user.email || '',
         avatar: user.user_metadata?.avatar_url || getMockAvatar(user.user_metadata?.name || 'User'),
       }
     : undefined;

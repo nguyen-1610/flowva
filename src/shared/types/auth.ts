@@ -25,3 +25,10 @@ export type AuthResponse = {
   error?: string;
   data?: any;
 };
+
+export interface CurrentUser {
+  id?: string;
+  name: string;
+  email: string;
+  avatar: string;
+}

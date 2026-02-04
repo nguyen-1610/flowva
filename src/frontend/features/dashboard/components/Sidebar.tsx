@@ -6,10 +6,11 @@ import { usePathname } from 'next/navigation';
 import { Layout, Kanban, ListTodo, Users, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { cn } from '@/frontend/lib/utils';
 import { ViewType } from '@/shared/types/ui-types';
+import { CurrentUser } from '@/shared/types/auth';
 
 export type DashboardTab = 'overview' | 'backlog' | 'board' | 'members';
 
-const Sidebar: React.FC<{ user?: { name: string; avatar: string } }> = ({ user }) => {
+const Sidebar: React.FC<{ user?: CurrentUser }> = ({ user }) => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 

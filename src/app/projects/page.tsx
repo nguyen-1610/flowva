@@ -9,12 +9,14 @@ import ProjectSelectorWrapper from '@/frontend/features/dashboard/components/Pro
 export default async function ProjectsPage() {
   const supabase = await createSupabaseServerClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     redirect('/login');
   }
 
-  return <ProjectSelectorWrapper />;
+  const userName = user.user_metadata.name || user.email?.split('@')[0] || 'User';
+
+  return <ProjectSelectorWrapper userName={userName} />;
 }

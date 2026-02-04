@@ -4,6 +4,8 @@ import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 import TopNavigation from '@/frontend/features/dashboard/components/TopNavigation';
 import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
+import { CurrentUser } from '@/shared/types/auth';
+
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -14,7 +16,8 @@ export default async function MainLayout({ children }: { children: React.ReactNo
     redirect('/');
   }
 
-  const userData = {
+  const userData: CurrentUser = {
+    id: user.id,
     name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
     email: user.email || '',
     avatar: user.user_metadata?.avatar_url || getMockAvatar(user.email || 'User'),

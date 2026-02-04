@@ -6,9 +6,13 @@ import { cn } from '@/frontend/lib/utils';
 
 interface ProjectSelectorProps {
   onSelectProject: () => void;
+  userName?: string;
 }
 
-const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelectProject }) => {
+const ProjectSelector: React.FC<ProjectSelectorProps> = ({
+  onSelectProject,
+  userName = 'Bạn',
+}) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-blue-50 to-indigo-50 p-6">
       {/* Header / Nav simulation */}
@@ -25,7 +29,7 @@ const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelectProject }) =>
         <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
           Welcome back,{' '}
           <span className="relative inline-block text-indigo-600">
-            Alex.
+            {userName}.
             <svg
               className="absolute -bottom-1 left-0 h-3 w-full text-yellow-400 opacity-80"
               viewBox="0 0 100 10"

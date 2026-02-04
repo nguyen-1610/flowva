@@ -25,15 +25,15 @@ import { logout } from '@/frontend/features/auth/actions';
 // For now, adhering to the prop-based navigation to match the current structure request,
 // but will likely switch to real routing later.
 
+import { CurrentUser } from '@/shared/types/auth';
+
 interface TopNavigationProps {
-  currentView: ViewType;
-  onChangeView: (view: ViewType) => void;
-  user?: { name: string; email: string; avatar: string };
+  currentView?: ViewType;
+  onChangeView?: (view: ViewType) => void;
+  user?: CurrentUser;
 }
 
-const TopNavigation: React.FC<{ user?: { name: string; email: string; avatar: string } }> = ({
-  user,
-}) => {
+const TopNavigation: React.FC<TopNavigationProps> = ({ user }) => {
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isPending, startTransition] = useTransition();

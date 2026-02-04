@@ -6,12 +6,12 @@ import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 export default async function RootPage() {
   const supabase = await createSupabaseServerClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  console.log('RootPage Session Check:', session ? 'Authenticated' : 'No Session');
+  console.log('RootPage User Check:', user ? 'Authenticated' : 'No User');
 
-  if (session) {
+  if (user) {
     redirect('/projects');
   }
 

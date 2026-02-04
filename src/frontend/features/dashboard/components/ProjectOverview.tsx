@@ -6,8 +6,10 @@ import { TrendingUp, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { cn } from '@/frontend/lib/utils';
 import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
+import { CurrentUser } from '@/shared/types/auth';
+
 interface ProjectOverviewProps {
-  user?: { name: string; avatar?: string };
+  user?: CurrentUser;
 }
 
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({ user }) => {
