@@ -7,8 +7,7 @@ Tài liệu hướng dẫn phát triển (Development Guide) cho dự án Flowva
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript 5
 - **Styling:** Tailwind CSS v4 (New Architecture)
-- **Database:** PostgreSQL (via Supabase)
-- **ORM:** Prisma
+- **Database:** PostgreSQL (via Supabase) with RLS
 - **State Management:** Zustand
 - **Realtime:** Supabase Realtime
 
@@ -28,8 +27,12 @@ Tài liệu hướng dẫn phát triển (Development Guide) cho dự án Flowva
 1. Clone repo về máy.
 2. Tại thư mục gốc, click đúp vào file `install_project.bat`.
    - Script sẽ tự động chạy `npm install`.
-   - Tự động chạy `npx prisma generate` để khởi tạo database client.
-3. Tạo file `.env` (copy từ `.env.example` nếu có) và điền `DATABASE_URL` của Supabase.
+3. Tạo file `.env` (copy từ `.env.example` nếu có) và điền thông tin Supabase (URL, Anon Key).
+4. (Tùy chọn) Nếu cần update Types từ DB:
+   ```bash
+   supabase login
+   supabase link --project-ref <project-id>
+   ```
 
 #### 🍎/🐧 Dành cho Mac & Linux
 
@@ -39,11 +42,12 @@ Mở terminal tại thư mục dự án và chạy lần lượt:
 # 1. Cài đặt thư viện
 npm install
 
-# 2. Khởi tạo Prisma Client (Bắt buộc để tránh lỗi DB)
-npx prisma generate
-
-# 3. Setup môi trường (Tự tạo file .env và điền connection string)
+# 2. Setup môi trường (Tự tạo file .env và điền connection string)
 cp .env.example .env
+
+# 3. (Tùy chọn) Authenticate với Supabase để lấy Types
+supabase login
+supabase link --project-ref <project-id>
 ```
 
 ---
@@ -78,62 +82,49 @@ npm run build
 
 ## 📂 Cấu Trúc Repo (Project Structure)
 
-Dự án áp dụng kiến trúc **Modular Monolith** , chia tách rõ ràng Frontend/Backend và quản lý theo Tính năng (Feature).
-
-**Plaintext**
+Dự án áp dụng kiến trúc **Supabase-Native Modular Monolith**, chia tách rõ ràng Frontend/Backend và quản lý theo Tính năng (Feature).
 
 ```
 flowva/
-├── .agent/                         # [NEW] AI AGENT SKILLS (Antigravity/Cursor)
-│   └── skills/
-│       └── vercel-react-best-practices/
-│           └── SKILL.md            # Quy tắc Performance & Server Actions
+├── .agent/                         # AI Agent Settings
+├── supabase/                       # [IMPORTANT] Cấu hình Supabase CLI (Local Dev)
+│   └── triggers.sql                # Các Database Triggers (Login trigger...)
 │
-├── .github/
-│   └── PULL_REQUEST_TEMPLATE.md
-│
-├── src/                            # [MOVED] Tất cả source code nằm trong src/
-│   ├── app/                        # NEXT.JS APP ROUTER (Routing only)
-│   │   ├── (auth)/                 # Group Route: Login/Register
-│   │   ├── dashboard/              # Dashboard Routes (Explicit Segment)
-│   │   │   ├── tasks/              # /dashboard/tasks
-│   │   │   ├── calendar/           # /dashboard/calendar
-│   │   │   ├── chat/               # /dashboard/chat
-│   │   │   ├── layout.tsx          # Dashboard Shared Layout
-│   │   │   └── page.tsx            # /dashboard
-│   │   ├── layout.tsx              # Root Layout
-│   │   ├── page.tsx                # Landing Page
-│   │   └── globals.css             # Tailwind v4 Config (@theme)
+├── src/                            # SOURCE CODE
+│   ├── app/                        # NEXT.JS APP ROUTER
+│   │   ├── (auth)/                 # Route Group: Auth (Login/Signup)
+│   │   ├── (main)/                 # Route Group: App chính (Đã đăng nhập)
+│   │   │   ├── dashboard/          # /dashboard
+│   │   │   ├── chat/               # /chat
+│   │   │   ├── calendar/           # /calendar
+│   │   │   └── layout.tsx          # Main Layout (Sidebar + TopNav)
+│   │   ├── projects/               # Route: Chọn dự án
+│   │   │
+│   │   ├── global.css              # [CORE] Tailwind CSS v4 Main Style
+│   │   ├── layout.tsx              # Root Layout (Fonts, Metadata)
+│   │   └── page.tsx                # Landing Page (Trang chủ)
 │   │
-│   ├── backend/                    # SERVER-SIDE LOGIC (Pure Business Logic)
-│   │   ├── services/               # [CORE] Logic nghiệp vụ & DB Call
-│   │   │   ├── task.service.ts     # Hàm xử lý: getTasks, createTask...
-│   │   │   └── user.service.ts
-│   │   └── lib/                    # Cấu hình Server
-│   │       ├── prisma.ts           # Prisma Client Instance
-│   │       └── supabase.ts         # Supabase Admin Client
+│   ├── backend/                    # SERVER-SIDE LOGIC
+│   │   ├── services/               # [CORE] Logic Business & Supabase Query
+│   │   │   ├── auth.service.ts     # Dùng Supabase Client để query
+│   │   │   └── task.service.ts
+│   │   └── lib/
+│   │       └── supabase/           # Cấu hình Supabase Client (SSR/Client/Admin)
+│   │           ├── server.ts       # Create Server Client
+│   │           └── client.ts       # Create Browser Client
 │   │
 │   ├── frontend/                   # CLIENT-SIDE UI
-│   │   ├── components/             # Shared UI Components (Button, Modal...)
-│   │   ├── lib/
-│   │   │   └── utils.ts            # Hàm tiện ích (cn, formatDate)
-│   │   │   # NOTE: Đã xóa axios.ts
-│   │   ├── features/               # [MODULAR] TÍNH NĂNG
-│   │   │   ├── auth/
-│   │   │   └── tasks/
-│   │   │       ├── components/     # UI: TaskCard, TaskList...
-│   │   │       ├── actions.ts      # [NEW] SERVER ACTIONS (Giao tiếp Backend)
-│   │   │       ├── hooks/          # React Hooks (useTransition, useFormStatus)
-│   │   │       └── stores/         # Zustand State (UI State only)
-│   │   └── providers/              # Context Providers
+│   │   ├── features/               # [MODULAR] TÍNH NĂNG (Auth, Tasks, Dashboard...)
+│   │   ├── components/             # UI dùng chung (Buttons, Modals)
+│   │   └── lib/                    # Utils (cn, format...)
 │   │
-│   └── shared/                     # CONTRACT (Types/DTOs)
-│       └── types/                  # Zod Schemas & Interfaces
+│   └── shared/                     # TYPES & CONTRACTS
+│       ├── types/
+│       │   ├── auth.ts             # App Types (CurrentUser...)
+│       │   └── database.types.ts   # [AUTO-GEN] Types từ Supabase Database
 │
-├── prisma/                         # Database Schema
-├── public/                         # Static Assets
-├── .cursorrules                    # [NEW] Luật & Context cho AI
-├── middleware.ts                   # Middleware (Check Cookie Auth)
+├── public/                         # Static Assets (Images, Icons)
+├── middleware.ts                   # Middleware (Bảo vệ Route bằng Supabase Auth)
 ├── next.config.ts
 ├── package.json
 └── tsconfig.json
@@ -141,42 +132,37 @@ flowva/
 
 # 💡 Hướng Dẫn Code Nhanh (Mini Guide)
 
-Khi nhận task mới, hãy tuân thủ quy tắc **"Modular Monolith"** và **"Server Actions"**.
+Khi nhận task mới, hãy tuân thủ quy tắc **"Supabase-Native Modular Monolith"** và **"Server Actions"**.
 
-### 1. Khi tạo UI Component & State (Frontend)
+### 1. Khi sửa Database (Supabase)
 
-- **Case A: Nút bấm, Input, Modal dùng chung cả App?**
-  👉 Tạo vào: `src/frontend/components/`
-- **Case B: Card Task, Form trong tính năng Project (Chỉ dùng cho 1 tính năng)?**
-  👉 Tạo vào: `src/frontend/features/[tên-feature]/components/`
-- **Case C: State quản lý giao diện (Zustand)?**
-  👉 Tạo vào: `src/frontend/features/[tên-feature]/stores/`
+Chúng ta không còn dùng `schema.prisma`. Mọi thay đổi DB thực hiện trực tiếp trên **Supabase Dashboard** hoặc qua **Migration SQL**.
 
-### 2. Khi viết Logic xử lý (Backend & Data Flow)
+Sau khi sửa DB, chạy lệnh sau để cập nhật Type cho Frontend/Backend:
 
-Luồng dữ liệu chuẩn: **Server Action** (Thay thế API Route) -> **Service** -> **Database**.
+```bash
+# 1. Login (chỉ lần đầu)
+supabase login
 
-- **Bước 1 (The Contract):** Cập nhật file `src/shared/types/...` để thống nhất dữ liệu (Interface & Zod Schema).
-- **Bước 2 (Service - Bếp trưởng):**
-  - Viết logic nghiệp vụ & gọi Prisma trong `src/backend/services/[tên].service.ts`.
-  - Hàm này trả về dữ liệu thuần (Plain Object), **KHÔNG** trả về `NextResponse`.
-- **Bước 3 (Server Action - Người phục vụ):**
-  - Tạo file `actions.ts` trong thư mục feature (VD: `src/frontend/features/tasks/actions.ts`).
-  - Khai báo `"use server"` ở dòng đầu tiên.
-  - Gọi hàm Service ở Bước 2.
-- **Bước 4 (Kết nối UI):**
-  - Nếu lấy dữ liệu (GET): Gọi thẳng Service trong `page.tsx` (Server Component).
-  - Nếu gửi dữ liệu (POST/PUT): Gọi Server Action từ Bước 3 trong `form` hoặc `onClick`.
+# 2. Cập nhật Type
+supabase gen types typescript --project-id <project-id> > src/shared/types/database.types.ts
+```
 
-### 3. Khi sửa Database (Prisma)
+### 2. Khi viết Logic xử lý (Backend Service)
 
-- **Bước 1:** Sửa file `prisma/schema.prisma`.
-- **Bước 2:** Đẩy lên DB (Cập nhật bảng):
-  **Bash**
+Luồng dữ liệu chuẩn: **Server Action** -> **Service** -> **Supabase Client**.
 
-  ```bash
-  npx prisma db push
-  ```
+- **Bước 1 (Service):**
+  - Import `createSupabaseServerClient` từ `@/backend/lib/supabase/server`.
+  - Import `Database` type từ `@/shared/types/database.types`.
+  - Viết hàm query dùng `supabase-js`:
+    ```typescript
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.from('Task').select('*');
+    ```
+- **Bước 2 (Server Action):**
+  - Gọi Service như bình thường.
+  - Xử lý `revalidatePath` hoặc `redirect`.
 
 ### 4. Quy tắc đặt tên (Naming Convention) 🚨
 
