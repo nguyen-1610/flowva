@@ -1,11 +1,11 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/backend/lib/supabase/server';
+import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 import TopNavigation from '@/frontend/features/dashboard/components/TopNavigation';
 import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

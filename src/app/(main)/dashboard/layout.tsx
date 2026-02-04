@@ -1,10 +1,10 @@
 import React from 'react';
-import { createClient } from '@/backend/lib/supabase/server';
+import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 import Sidebar from '@/frontend/features/dashboard/components/Sidebar';
 import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

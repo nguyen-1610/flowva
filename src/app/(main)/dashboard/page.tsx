@@ -1,10 +1,10 @@
 import React from 'react';
-import { createClient } from '@/backend/lib/supabase/server';
+import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 import ProjectOverview from '@/frontend/features/dashboard/components/ProjectOverview';
 import { getMockAvatar } from '@/frontend/lib/avatar-utils';
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

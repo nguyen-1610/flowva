@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signup } from '@/frontend/features/auth/actions';
@@ -12,13 +12,14 @@ import { useSearchParams } from 'next/navigation';
 
 export default function SignupForm() {
   const [isPending, startTransition] = useTransition();
+  const [success, setSuccess] = useState(false);
   const searchParams = useSearchParams();
   const {
     register,
     handleSubmit,
     setError,
     setValue,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<SignupInput>({
     resolver: zodResolver(SignupSchema),
   });
@@ -39,13 +40,18 @@ export default function SignupForm() {
       if (data.name) formData.append('name', data.name);
 
       const result = await signup(null, formData);
-      if (result && !result.success && result.error) {
-        setError('root', { message: result.error });
+
+      if (result) {
+        if (!result.success && result.error) {
+          setError('root', { message: result.error });
+        } else if (result.success) {
+          setSuccess(true);
+        }
       }
     });
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleAuth = async () => {
     try {
       const supabase = createClient();
 
@@ -76,7 +82,7 @@ export default function SignupForm() {
     }
   };
 
-  if (isSubmitSuccessful) {
+  if (success) {
     return (
       <div className="space-y-6 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-8 text-center shadow-xl backdrop-blur-xl">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
@@ -197,7 +203,7 @@ export default function SignupForm() {
 
       <button
         type="button"
-        onClick={handleGoogleLogin}
+        onClick={handleGoogleAuth}
         className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-black/40 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
       >
         <svg className="h-4 w-4" viewBox="0 0 24 24">

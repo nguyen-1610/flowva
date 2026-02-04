@@ -33,7 +33,7 @@ export default function LoginForm() {
     });
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleAuth = async () => {
     try {
       const supabase = createClient();
 
@@ -133,7 +133,7 @@ export default function LoginForm() {
 
       <button
         type="button"
-        onClick={handleGoogleLogin}
+        onClick={handleGoogleAuth}
         className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-black/40 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
       >
         <svg className="h-4 w-4" viewBox="0 0 24 24">

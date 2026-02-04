@@ -1,10 +1,10 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import LandingPage from '@/frontend/features/landing/components/LandingPage';
-import { createClient } from '@/backend/lib/supabase/server';
+import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
 
 export default async function RootPage() {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();
