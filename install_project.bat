@@ -8,7 +8,17 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo [INFO] Setup hoan tat!
-echo [INFO] Ban hay tao file .env tu .env.example va dien thong tin Supabase nhe.
+echo [INFO] Tu dong tao file .env.local tu .env.example...
+if not exist .env.local (
+    copy .env.example .env.local
+    echo [SUCCESS] Da tao file .env.local.
+) else (
+    echo [SKIP] File .env.local da ton tai.
+)
+
+echo.
+echo [INFO] SETUP HOAN TAT!
+echo [IMPORTANT] Ban hay dam bao Docker dang chay, sau do go lenh sau:
+echo            supabase start
 echo.
 pause

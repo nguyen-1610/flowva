@@ -19,20 +19,33 @@ Tài liệu hướng dẫn phát triển (Development Guide) cho dự án Flowva
 
 - **Node.js**: Phiên bản 20 trở lên.
 - **Git**: Đã cài đặt.
+- **Docker**: (BẮT BUỘC để chạy Supabase Local). Cài đặt Docker Desktop và đảm bảo nó đang chạy.
+- **Supabase CLI**: Cài đặt để quản lý database local.
+  ```bash
+  # Mac (Homebrew)
+  brew install supabase/tap/supabase
+  # Windows (Scoop)
+  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+  scoop install supabase
+  ```
 
 ### 2. Cài đặt Project
 
 #### 🪟 Dành cho Windows
 
 1. Clone repo về máy.
-2. Tại thư mục gốc, click đúp vào file `install_project.bat`.
-   - Script sẽ tự động chạy `npm install`.
-3. Tạo file `.env` (copy từ `.env.example` nếu có) và điền thông tin Supabase (URL, Anon Key).
-4. (Tùy chọn) Nếu cần update Types từ DB:
+2. Tại thư mục gốc, click đúp vào file `install_project.bat` để chạy `npm install`.
+3. Khởi động Supabase Local:
    ```bash
-   supabase login
-   supabase link --project-ref <project-id>
+   supabase start
    ```
+4. Copy file `.env.example` thành `.env.local`:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   _(Các giá trị trong .env.example đã được cấu hình sẵn cho môi trường local mặc định)._
 
 #### 🍎/🐧 Dành cho Mac & Linux
 
@@ -42,13 +55,30 @@ Mở terminal tại thư mục dự án và chạy lần lượt:
 # 1. Cài đặt thư viện
 npm install
 
-# 2. Setup môi trường (Tự tạo file .env và điền connection string)
-cp .env.example .env
+# 2. Khởi động Supabase Local (Yêu cầu Docker đang chạy)
+supabase start
 
-# 3. (Tùy chọn) Authenticate với Supabase để lấy Types
-supabase login
-supabase link --project-ref <project-id>
+# 3. Setup môi trường
+cp .env.example .env.local
 ```
+
+---
+
+## 🛠 Quản Lý Supabase Local
+
+Khi chạy `supabase start`, bạn sẽ có các công cụ sau:
+
+- **Supabase Studio (Dashboard local):** [http://127.0.0.1:54323](http://127.0.0.1:54323)
+  - Dùng để xem dữ liệu, quản lý bảng, Auth, Storage y hệt trên web.
+- **API URL:** `http://127.0.0.1:54321`
+- **DB URL:** `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+- **Mailpit (Xem email gửi đi):** [http://127.0.0.1:54324](http://127.0.0.1:54324)
+
+**Các lệnh hữu ích:**
+
+- `supabase stop`: Dừng các service (nên chạy khi không làm việc nữa để tiết kiệm RAM).
+- `supabase status`: Kiểm tra trạng thái và các link/key.
+- `supabase db reset`: Xóa toàn bộ dữ liệu và chạy lại các file migration/seed từ đầu.
 
 ---
 
@@ -196,9 +226,6 @@ Tuyệt đối không commit kiểu: _"fix"_ , _"update"_ , _"code xong roi"_ .
 
 Công thức: **`[Type]([Scope]): [Nội dung ngắn gọn]`**
 
-**1. Type (Loại thay đổi):**
-
-- `feat`: Tính năng mới.
 - `fix`: Sửa lỗi.
 - `ui`: Chỉ chỉnh sửa CSS, giao diện (không dính logic).
 - `refactor`: Sửa code nhưng không đổi tính năng.

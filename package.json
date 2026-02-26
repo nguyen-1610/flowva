@@ -10,7 +10,8 @@
     "install:all": "npm install && npx prisma generate",
     "db:push": "npx prisma db push",
     "db:studio": "npx prisma studio",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "gen-types": "supabase gen types typescript --local > src/shared/types/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
