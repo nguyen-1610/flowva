@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { MoreHorizontal, Plus, Calendar, MessageSquare, Paperclip } from 'lucide-react';
-import { Task, TaskStatus, User } from '@/shared/types/ui-types';
+import { Task, User } from '@/shared/types/ui-types';
 import { useTasks } from '@/frontend/features/tasks/hooks/useTasks';
 import { TaskBoardSkeleton } from '@/frontend/features/tasks/components/TaskBoardSkeleton';
 import { cn } from '@/frontend/lib/utils';
@@ -18,7 +18,7 @@ const mockTasks: Task[] = [
   {
     id: 't1',
     title: 'Design Homepage Mockup',
-    status: TaskStatus.TODO,
+    columnId: 'TODO',
     assignees: [mockUsers[0]],
     dueDate: 'Tomorrow',
     priority: 'High',
@@ -28,7 +28,7 @@ const mockTasks: Task[] = [
   {
     id: 't2',
     title: 'Integrate API Endpoints',
-    status: TaskStatus.IN_PROGRESS,
+    columnId: 'IN_PROGRESS',
     assignees: [mockUsers[1], mockUsers[2]],
     dueDate: 'Oct 24',
     priority: 'Medium',
@@ -38,7 +38,7 @@ const mockTasks: Task[] = [
   {
     id: 't3',
     title: 'Write Documentation',
-    status: TaskStatus.TODO,
+    columnId: 'TODO',
     assignees: [mockUsers[2]],
     dueDate: 'Next Week',
     priority: 'Low',
@@ -48,7 +48,7 @@ const mockTasks: Task[] = [
   {
     id: 't4',
     title: 'Fix Navigation Bug',
-    status: TaskStatus.REVIEW,
+    columnId: 'REVIEW',
     assignees: [mockUsers[0]],
     dueDate: 'Today',
     priority: 'High',
@@ -58,7 +58,7 @@ const mockTasks: Task[] = [
   {
     id: 't5',
     title: 'Setup CI/CD Pipeline',
-    status: TaskStatus.DONE,
+    columnId: 'DONE',
     assignees: [mockUsers[1]],
     dueDate: 'Oct 20',
     priority: 'Medium',
@@ -71,13 +71,13 @@ const KanbanBoard: React.FC = () => {
   const { tasks: data, isLoading, isError } = useTasks();
 
   const columns = [
-    { id: TaskStatus.TODO, title: 'To Do', color: 'bg-slate-100 border-t-4 border-slate-400' },
+    { id: 'TODO', title: 'To Do', color: 'bg-slate-100 border-t-4 border-slate-400' },
     {
-      id: TaskStatus.IN_PROGRESS,
+      id: 'IN_PROGRESS',
       title: 'In Progress',
       color: 'bg-blue-50 border-t-4 border-blue-500',
     },
-    { id: TaskStatus.DONE, title: 'Done', color: 'bg-green-50 border-t-4 border-green-500' },
+    { id: 'DONE', title: 'Done', color: 'bg-green-50 border-t-4 border-green-500' },
   ];
 
   if (isLoading) return <TaskBoardSkeleton />;
@@ -124,8 +124,8 @@ const KanbanBoard: React.FC = () => {
 
       <div className="flex h-[calc(100%-80px)] gap-6 pb-4">
         {columns.map((col) => {
-          // Map backend status to UI col ID if needed, but here they match
-          const columnTasks = tasks.filter((t) => t.status === col.id);
+          // Map backend columnId to UI col ID if needed, but here they match
+          const columnTasks = tasks.filter((t) => t.columnId === col.id);
 
           return (
             <div

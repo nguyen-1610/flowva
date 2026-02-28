@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Plus, ChevronDown, MoreHorizontal, User as UserIcon, GripVertical } from 'lucide-react';
-import { Task, TaskStatus } from '@/shared/types/ui-types';
+import { Task } from '@/shared/types/ui-types';
 import { useTasks } from '@/frontend/features/tasks/hooks/useTasks';
 import { TaskBacklogSkeleton } from '@/frontend/features/tasks/components/TaskBacklogSkeleton';
 import { cn } from '@/frontend/lib/utils';
@@ -11,7 +11,7 @@ const mockBacklogTasks: Task[] = [
   {
     id: 't1',
     title: 'Design Homepage Mockup',
-    status: TaskStatus.TODO,
+    columnId: 'TODO',
     assignees: [],
     dueDate: 'Tomorrow',
     priority: 'High',
@@ -21,7 +21,7 @@ const mockBacklogTasks: Task[] = [
   {
     id: 't2',
     title: 'Integrate API Endpoints',
-    status: TaskStatus.IN_PROGRESS,
+    columnId: 'IN_PROGRESS',
     assignees: [],
     dueDate: 'Oct 24',
     priority: 'Medium',
@@ -31,7 +31,7 @@ const mockBacklogTasks: Task[] = [
   {
     id: 't3',
     title: 'Write Documentation',
-    status: TaskStatus.TODO,
+    columnId: 'TODO',
     assignees: [],
     dueDate: 'Next Week',
     priority: 'Low',
@@ -41,7 +41,7 @@ const mockBacklogTasks: Task[] = [
   {
     id: 't4',
     title: 'Fix Navigation Bug',
-    status: TaskStatus.REVIEW,
+    columnId: 'REVIEW',
     assignees: [],
     dueDate: 'Today',
     priority: 'High',
@@ -51,7 +51,7 @@ const mockBacklogTasks: Task[] = [
   {
     id: 't6',
     title: 'Update Color Palette',
-    status: TaskStatus.TODO,
+    columnId: 'TODO',
     assignees: [],
     dueDate: 'Oct 30',
     priority: 'Low',
@@ -61,7 +61,7 @@ const mockBacklogTasks: Task[] = [
   {
     id: 't7',
     title: 'Database Migration',
-    status: TaskStatus.TODO,
+    columnId: 'TODO',
     assignees: [],
     dueDate: 'Nov 1',
     priority: 'High',
@@ -140,14 +140,14 @@ const BacklogView: React.FC = () => {
           <span
             className={cn(
               'inline-block rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap',
-              task.status === 'DONE'
+              task.columnId === 'DONE'
                 ? 'bg-green-100 text-green-700'
-                : task.status === 'IN_PROGRESS'
+                : task.columnId === 'IN_PROGRESS'
                   ? 'bg-blue-100 text-blue-700'
                   : 'bg-slate-100 text-slate-600',
             )}
           >
-            {task.status.replace('_', ' ')}
+            {task.columnId.replace('_', ' ')}
           </span>
         </div>
 
