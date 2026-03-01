@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from '@/shared/types/ui-types';
+import { Task } from '@/shared/types/ui-types';
 
 // Simulated network delay
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -10,7 +10,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '1',
       title: 'Design System',
-      status: TaskStatus.IN_PROGRESS,
+      columnId: 'IN_PROGRESS',
       priority: 'High',
       assignees: [{ id: 'u1', name: 'Sarah Chen', avatar: '' }],
       sprint: 'Sprint 24',
@@ -20,7 +20,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '2',
       title: 'Setup Next.js',
-      status: TaskStatus.DONE,
+      columnId: 'DONE',
       priority: 'High',
       assignees: [{ id: 'u2', name: 'You', avatar: '' }],
       sprint: 'Sprint 24',
@@ -30,7 +30,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '3',
       title: 'Authentication Flow',
-      status: TaskStatus.TODO,
+      columnId: 'TODO',
       priority: 'Medium',
       assignees: [],
       sprint: 'Sprint 24',
@@ -40,7 +40,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '4',
       title: 'Database Schema',
-      status: TaskStatus.IN_PROGRESS,
+      columnId: 'IN_PROGRESS',
       priority: 'High',
       assignees: [{ id: 'u3', name: 'Mike', avatar: '' }],
       sprint: 'Sprint 24',
@@ -50,7 +50,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '5',
       title: 'API Documentation',
-      status: TaskStatus.TODO,
+      columnId: 'TODO',
       priority: 'Low',
       assignees: [],
       sprint: 'Backlog',
@@ -60,7 +60,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '6',
       title: 'Frontend Testing',
-      status: TaskStatus.TODO,
+      columnId: 'TODO',
       priority: 'Medium',
       assignees: [],
       sprint: 'Backlog',
@@ -70,7 +70,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '7',
       title: 'CI/CD Pipeline',
-      status: TaskStatus.DONE,
+      columnId: 'DONE',
       priority: 'High',
       assignees: [],
       sprint: 'Sprint 24',
@@ -80,7 +80,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '8',
       title: 'User Profile Page',
-      status: TaskStatus.IN_PROGRESS,
+      columnId: 'IN_PROGRESS',
       priority: 'Medium',
       assignees: [{ id: 'u2', name: 'You', avatar: '' }],
       sprint: 'Sprint 24',
@@ -90,7 +90,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '9',
       title: 'Dark Mode Support',
-      status: TaskStatus.TODO,
+      columnId: 'TODO',
       priority: 'Low',
       assignees: [],
       sprint: 'Backlog',
@@ -100,7 +100,7 @@ export const getTasksMock = async (): Promise<Task[]> => {
     {
       id: '10',
       title: 'Mobile Responsiveness',
-      status: TaskStatus.IN_PROGRESS,
+      columnId: 'IN_PROGRESS',
       priority: 'High',
       assignees: [],
       sprint: 'Backlog',

@@ -56,7 +56,7 @@ Mở terminal tại thư mục dự án và chạy lần lượt:
 npm install
 
 # 2. Khởi động Supabase Local (Yêu cầu Docker đang chạy)
-supabase start
+npx supabase start
 
 # 3. Setup môi trường
 cp .env.example .env.local
@@ -76,9 +76,9 @@ Khi chạy `supabase start`, bạn sẽ có các công cụ sau:
 
 **Các lệnh hữu ích:**
 
-- `supabase stop`: Dừng các service (nên chạy khi không làm việc nữa để tiết kiệm RAM).
-- `supabase status`: Kiểm tra trạng thái và các link/key.
-- `supabase db reset`: Xóa toàn bộ dữ liệu và chạy lại các file migration/seed từ đầu.
+- `npx supabase stop`: Dừng các service (nên chạy khi không làm việc nữa để tiết kiệm RAM).
+- `npx supabase status`: Kiểm tra trạng thái và các link/key.
+- `npx supabase db reset`: Xóa toàn bộ dữ liệu và chạy lại các file migration/seed từ đầu.
 
 ---
 

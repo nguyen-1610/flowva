@@ -15,15 +15,6 @@ export enum ViewType {
   SETTINGS = 'SETTINGS',
 }
 
-// --- TASK STATUS (UI Display) ---
-// Note: Nếu cần sync với Backend, import từ tasks.ts
-export enum TaskStatus {
-  TODO = 'TODO',
-  IN_PROGRESS = 'IN_PROGRESS',
-  REVIEW = 'REVIEW',
-  DONE = 'DONE',
-}
-
 // --- USER (UI Display) ---
 // Lightweight user info cho UI components
 export interface User {
@@ -40,7 +31,7 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: TaskStatus;
+  columnId: string;
   assignees: User[];
   dueDate: string;
   priority: 'Low' | 'Medium' | 'High';

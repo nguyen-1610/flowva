@@ -4,19 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "install:all": "npm install && npx prisma generate",
-    "db:push": "npx prisma db push",
-    "db:studio": "npx prisma studio",
+    "install:all": "npm install",
     "format": "prettier --write .",
     "gen-types": "supabase gen types typescript --local > src/shared/types/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.93.3",
     "bootstrap": "^5.3.8",
@@ -25,7 +21,6 @@
     "dotenv": "^17.2.3",
     "lucide-react": "^0.562.0",
     "next": "16.1.4",
-    "pg": "^8.17.2",
     "react": "19.2.3",
     "react-bootstrap": "^2.10.10",
     "react-dom": "19.2.3",
@@ -39,14 +34,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^20.17.10",
-    "@types/pg": "^8.16.0",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "prisma": "^7.3.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.7.2"
   }
