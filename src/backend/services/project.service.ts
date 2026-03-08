@@ -84,4 +84,26 @@ export class ProjectService {
       throw new Error('Failed to update project');
     }
   }
+
+  /**
+   * Lấy danh sách dự án (có RLS phân quyền bảo mật)
+   */
+  static async getList() {
+    try {
+      const supabase = await createSupabaseServerClient();
+
+      // Supabase sẽ tự động áp dụng RLS
+      const { data, error } = await supabase
+        .from('projects')
+        .select()
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return data;
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      throw new Error('Failed to fetch projects');
+    }
+  }
 }
