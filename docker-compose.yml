@@ -1,0 +1,25 @@
+# Phiên bản cấu trúc file docker-compose (thường dùng 3.8 là chuẩn và ổn định nhất)
+version: '3.8'
+
+# services: Nơi khai báo các "app/dịch vụ" bạn muốn chạy lên
+services:
+  # Tên dịch vụ do bạn tự đặt (mình đặt là web)
+  web:
+    # Báo cho Docker biết: "Hãy tự đi tìm file Dockerfile và tự build ra Image nhé"
+    build:
+      context: .              # . (dấu chấm) nghĩa là hãy tìm trong thư mục hiện tại
+      dockerfile: Dockerfile
+    
+    # Đặt một cái tên đẹp đẽ cho cái container lúc nó chạy lên (thay vì tên ngẫu nhiên dài ngoằng)
+    container_name: flowva
+    
+    # Thiết lập cổng mạng: "Cổng_bên_ngoài_máy_tính_của_bạn" : "Cổng_bên_trong_của_Docker"
+    ports:
+      - "3000:3000"
+    
+    # Kêu Docker tự động đọc các biến bảo mật từ file .env.local nhét vào bên trong container
+    env_file:
+      - .env.local
+    
+    # Cấu hình tự động khởi động lại (nếu app bị crash lỗi hoặc bạn khởi động lại máy tính)
+    restart: unless-stopped
