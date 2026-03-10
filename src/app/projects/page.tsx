@@ -1,10 +1,9 @@
-// src/app/projects/page.tsx - ĐÚNG
-// Lỗi: Vẫn dùng getSession() → đổi sang getUser()
-
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
-import ProjectSelectorWrapper from '@/frontend/features/dashboard/components/ProjectSelectorWrapper';
+import { ProjectService } from '@/backend/services/project.service';
+import ProjectSelectorWrapper from '@/frontend/features/projects/components/ProjectSelectorWrapper';
+import type { ProjectDTO } from '@/shared/types/project';
 
 export default async function ProjectsPage() {
   const supabase = await createSupabaseServerClient();
@@ -16,7 +15,16 @@ export default async function ProjectsPage() {
     redirect('/login');
   }
 
-  const userName = user.user_metadata.name || user.email?.split('@')[0] || 'User';
+  const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'User';
 
-  return <ProjectSelectorWrapper userName={userName} />;
+  // Lấy danh sách projects trực tiếp từ Service (Server Component)
+  let projects: ProjectDTO[] = [];
+  try {
+    projects = (await ProjectService.getList()) as ProjectDTO[];
+  } catch {
+    // Nếu lỗi thì hiển thị danh sách rỗng, không crash page
+    projects = [];
+  }
+
+  return <ProjectSelectorWrapper userName={userName} projects={projects} />;
 }

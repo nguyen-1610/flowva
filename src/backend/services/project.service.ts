@@ -1,109 +1,116 @@
 import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
-import { Database } from '@/shared/types/database.types';
-
-type ProjectInsert = Database['public']['Tables']['projects']['Insert'];
-type ProjectUpdate = Database['public']['Tables']['projects']['Update'];
+import type { CreateProjectInput, UpdateProjectInput } from '@/shared/types/project';
 
 export class ProjectService {
   /**
-   * Tạo một dự án (Project) mới
-   * Lấy data theo kiểu Insert của Supabase (Bắt buộc phải có name và owner_id)
+   * Tạo một dự án (Project) mới.
+   * owner_id được lấy từ session — không để Frontend truyền vào.
    */
-  static async create(projectData: ProjectInsert) {
-    try {
-      const supabase = await createSupabaseServerClient();
+  static async create(projectData: CreateProjectInput) {
+    const supabase = await createSupabaseServerClient();
 
-      const { data, error } = await supabase
-        .from('projects')
-        .insert([projectData])
-        .select()
-        .single();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-      if (error) throw error;
+    if (!user) {
+      throw new Error('Unauthorized: No active session');
+    }
 
-      return data;
-    } catch (error) {
+    const { data, error } = await supabase
+      .from('projects')
+      .insert([{ ...projectData, owner_id: user.id }])
+      .select()
+      .single();
+
+    if (error) {
       console.error('Error creating project:', error);
       throw new Error('Failed to create project');
     }
+
+    return data;
   }
 
   /**
-   * Cập nhật thông tin dự án
+   * Cập nhật thông tin dự án.
    */
-  static async update(id: string, updateData: ProjectUpdate) {
-    try {
-      const supabase = await createSupabaseServerClient();
+  static async update(id: string, updateData: UpdateProjectInput) {
+    const supabase = await createSupabaseServerClient();
 
-      const { data, error } = await supabase
-        .from('projects')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
+    const { data, error } = await supabase
+      .from('projects')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
 
-      if (error) throw error;
-
-      return data;
-    } catch (error) {
+    if (error) {
+      // PGRST116 = "no rows" → project không tồn tại hoặc RLS từ chối
+      if (error.code === 'PGRST116') {
+        throw new Error('Project not found or access denied');
+      }
       console.error('Error updating project:', error);
       throw new Error('Failed to update project');
     }
+
+    return data;
   }
+
   /**
-   * Xóa dự án
+   * Xóa dự án.
    */
   static async delete(id: string) {
-    try {
-      const supabase = await createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
 
-      const { data, error } = await supabase.from('projects').delete().eq('id', id);
+    const { error } = await supabase.from('projects').delete().eq('id', id);
 
-      if (error) throw error;
-
-      return data;
-    } catch (error) {
-      console.error('Error updating project:', error);
-      throw new Error('Failed to update project');
+    if (error) {
+      console.error('Error deleting project:', error);
+      throw new Error('Failed to delete project');
     }
+
+    return { success: true };
   }
+
   /**
-   * Lấy thông tin dự án
+   * Lấy thông tin một dự án theo ID.
    */
   static async get(id: string) {
-    try {
-      const supabase = await createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
 
-      const { data, error } = await supabase.from('projects').select().eq('id', id).single();
+    const { data, error } = await supabase
+      .from('projects')
+      .select()
+      .eq('id', id)
+      .single();
 
-      if (error) throw error;
-
-      return data;
-    } catch (error) {
-      console.error('Error updating project:', error);
-      throw new Error('Failed to update project');
+    if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error('Project not found or access denied');
+      }
+      console.error('Error getting project:', error);
+      throw new Error('Failed to get project');
     }
+
+    return data;
   }
 
   /**
-   * Lấy danh sách dự án (có RLS phân quyền bảo mật)
+   * Lấy danh sách dự án của user hiện tại (RLS tự phân quyền).
    */
   static async getList() {
-    try {
-      const supabase = await createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
 
-      // Supabase sẽ tự động áp dụng RLS
-      const { data, error } = await supabase
-        .from('projects')
-        .select()
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('projects')
+      .select()
+      .order('created_at', { ascending: false });
 
-      if (error) throw error;
-
-      return data;
-    } catch (error) {
+    if (error) {
       console.error('Error fetching projects:', error);
       throw new Error('Failed to fetch projects');
     }
+
+    return data;
   }
 }
