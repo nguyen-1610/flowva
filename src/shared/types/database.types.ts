@@ -7,10 +7,30 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.1"
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -116,6 +136,384 @@ export type Database = {
           },
         ]
       }
+      conversation_members: {
+        Row: {
+          can_post: boolean
+          conversation_id: string
+          is_muted: boolean
+          joined_at: string | null
+          last_read_at: string | null
+          last_read_message_id: string | null
+          role: Database["public"]["Enums"]["chat_member_role"]
+          user_id: string
+        }
+        Insert: {
+          can_post?: boolean
+          conversation_id: string
+          is_muted?: boolean
+          joined_at?: string | null
+          last_read_at?: string | null
+          last_read_message_id?: string | null
+          role?: Database["public"]["Enums"]["chat_member_role"]
+          user_id: string
+        }
+        Update: {
+          can_post?: boolean
+          conversation_id?: string
+          is_muted?: boolean
+          joined_at?: string | null
+          last_read_at?: string | null
+          last_read_message_id?: string | null
+          role?: Database["public"]["Enums"]["chat_member_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_members_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_members_last_read_message_id_fkey"
+            columns: ["last_read_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversation_task_links: {
+        Row: {
+          conversation_id: string
+          created_at: string | null
+          is_primary: boolean
+          linked_by: string | null
+          task_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string | null
+          is_primary?: boolean
+          linked_by?: string | null
+          task_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string | null
+          is_primary?: boolean
+          linked_by?: string | null
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_task_links_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_task_links_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          is_archived: boolean
+          last_message_at: string | null
+          last_message_id: string | null
+          metadata: Json
+          name: string | null
+          project_id: string
+          related_task_id: string | null
+          topic: string | null
+          type: Database["public"]["Enums"]["chat_conversation_type"]
+          updated_at: string | null
+          visibility: Database["public"]["Enums"]["chat_visibility"]
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          last_message_at?: string | null
+          last_message_id?: string | null
+          metadata?: Json
+          name?: string | null
+          project_id: string
+          related_task_id?: string | null
+          topic?: string | null
+          type?: Database["public"]["Enums"]["chat_conversation_type"]
+          updated_at?: string | null
+          visibility?: Database["public"]["Enums"]["chat_visibility"]
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          last_message_at?: string | null
+          last_message_id?: string | null
+          metadata?: Json
+          name?: string | null
+          project_id?: string
+          related_task_id?: string | null
+          topic?: string | null
+          type?: Database["public"]["Enums"]["chat_conversation_type"]
+          updated_at?: string | null
+          visibility?: Database["public"]["Enums"]["chat_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_last_message_id_fkey"
+            columns: ["last_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_related_task_id_fkey"
+            columns: ["related_task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_attachments: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: number | null
+          file_url: string
+          id: string
+          message_id: string
+          mime_type: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: number | null
+          file_url: string
+          id?: string
+          message_id: string
+          mime_type?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          message_id?: string
+          mime_type?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_reads: {
+        Row: {
+          message_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          message_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          message_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_reads_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_task_mentions: {
+        Row: {
+          created_at: string | null
+          mentioned_by: string | null
+          message_id: string
+          task_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          mentioned_by?: string | null
+          message_id: string
+          task_id: string
+        }
+        Update: {
+          created_at?: string | null
+          mentioned_by?: string | null
+          message_id?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_task_mentions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_task_mentions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_user_mentions: {
+        Row: {
+          created_at: string
+          mentioned_by: string | null
+          mentioned_user_id: string
+          message_id: string
+        }
+        Insert: {
+          created_at?: string
+          mentioned_by?: string | null
+          mentioned_user_id: string
+          message_id: string
+        }
+        Update: {
+          created_at?: string
+          mentioned_by?: string | null
+          mentioned_user_id?: string
+          message_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_user_mentions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string | null
+          conversation_id: string
+          deleted_at: string | null
+          edited_at: string | null
+          id: string
+          message_type: Database["public"]["Enums"]["chat_message_type"]
+          metadata: Json
+          reply_to_message_id: string | null
+          sender_id: string | null
+          sent_at: string | null
+        }
+        Insert: {
+          content?: string | null
+          conversation_id: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          id?: string
+          message_type?: Database["public"]["Enums"]["chat_message_type"]
+          metadata?: Json
+          reply_to_message_id?: string | null
+          sender_id?: string | null
+          sent_at?: string | null
+        }
+        Update: {
+          content?: string | null
+          conversation_id?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          id?: string
+          message_type?: Database["public"]["Enums"]["chat_message_type"]
+          metadata?: Json
+          reply_to_message_id?: string | null
+          sender_id?: string | null
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_message_id_fkey"
+            columns: ["reply_to_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_members: {
         Row: {
           joined_at: string | null
@@ -180,7 +578,7 @@ export type Database = {
           name: string
           project_id: string
           start_date: string | null
-          status: string | null
+          status: Database["public"]["Enums"]["sprint_status"] | null
         }
         Insert: {
           created_at?: string | null
@@ -189,7 +587,7 @@ export type Database = {
           name: string
           project_id: string
           start_date?: string | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["sprint_status"] | null
         }
         Update: {
           created_at?: string | null
@@ -198,7 +596,7 @@ export type Database = {
           name?: string
           project_id?: string
           start_date?: string | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["sprint_status"] | null
         }
         Relationships: [
           {
@@ -402,19 +800,67 @@ export type Database = {
           },
         ]
       }
+      user_profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      can_access_conversation: {
+        Args: { p_conversation_id: string }
+        Returns: boolean
+      }
+      can_manage_conversation: {
+        Args: { p_conversation_id: string }
+        Returns: boolean
+      }
+      can_post_to_conversation: {
+        Args: { p_conversation_id: string }
+        Returns: boolean
+      }
       get_project_role: {
         Args: { p_id: string }
         Returns: Database["public"]["Enums"]["project_role"]
       }
       is_admin_or_owner: { Args: { p_id: string }; Returns: boolean }
+      is_project_member: { Args: { p_id: string }; Returns: boolean }
     }
     Enums: {
+      chat_conversation_type: "direct" | "group" | "project" | "task"
+      chat_member_role: "admin" | "member"
+      chat_message_type: "text" | "system" | "file"
+      chat_visibility: "private" | "project"
       project_role: "owner" | "admin" | "member" | "viewer"
+      sprint_status: "planned" | "active" | "completed" | "cancelled"
       task_priority: "low" | "medium" | "high" | "urgent"
     }
     CompositeTypes: {
@@ -541,10 +987,19 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
+      chat_conversation_type: ["direct", "group", "project", "task"],
+      chat_member_role: ["admin", "member"],
+      chat_message_type: ["text", "system", "file"],
+      chat_visibility: ["private", "project"],
       project_role: ["owner", "admin", "member", "viewer"],
+      sprint_status: ["planned", "active", "completed", "cancelled"],
       task_priority: ["low", "medium", "high", "urgent"],
     },
   },
 } as const
+

@@ -1,7 +1,8 @@
-# Flowva System Architecture
+# Flowva — System Architecture
 
-This document outlines the high-level architecture of the Flowva project, following the **Modular Monolith** pattern with **Next.js Server Actions**.
-The architecture emphasizes a clear separation between Client and Server logic, while leveraging Next.js 16's capability to call server functions directly.
+Tài liệu mô tả kiến trúc hệ thống của Flowva, theo mô hình **Supabase-Native Modular Monolith** với **Next.js 16 Server Actions**.
+
+---
 
 ## 🏗 Architecture Diagram
 
@@ -14,13 +15,11 @@ graph TD
         direction TB
         UI["UI Components<br/>(src/frontend/features/*/components)"]
 
-        %% Client Logic bây giờ đơn giản hơn, chủ yếu là Form & Event
         subgraph ClientLogic ["Client Logic"]
             AuthHook["Auth Client<br/>(Supabase SDK)"]
             FormHandler["Forms & Event Handlers"]
         end
 
-        %% Frontend Internal Flow
         UI -->|"Interaction"| FormHandler
         UI --> AuthHook
     end
@@ -28,22 +27,20 @@ graph TD
     %% --- SHARED CONTRACT ---
     Contract[/"Shared Types & DTOs<br/>(src/shared/types)"/]
 
-    %% --- BACKEND / SERVER CONTEXT (THE BIG CHANGE) ---
+    %% --- BACKEND / SERVER CONTEXT ---
     subgraph Server ["Next.js Server Environment (src/)"]
         direction TB
 
         Middleware["Middleware<br/>(middleware.ts)"]
 
-        %% Hai điểm tiếp nhận request chính của Next.js 16
         subgraph EntryPoints ["Server Entry Points"]
             RSC["Server Components (RSC)<br/>(src/app/page.tsx)"]
             S_Action["Server Actions<br/>(src/frontend/.../actions.ts)"]
         end
 
         Service["Service Layer<br/>(src/backend/services)"]
-        Repo["Prisma Client<br/>(src/backend/lib/prisma)"]
+        Repo["Supabase Server Client<br/>(src/backend/lib/supabase)"]
 
-        %% Server Internal Flow
         Middleware -.->|"Protect"| EntryPoints
         RSC -->|"1. Direct Function Call (GET)"| Service
         S_Action -->|"2. Remote Procedure Call (POST)"| Service
@@ -53,22 +50,19 @@ graph TD
     %% --- INFRASTRUCTURE ---
     subgraph Infra ["Supabase Infrastructure"]
         SB_Auth["Supabase Auth"]
-        SB_DB[("PostgreSQL DB")]
+        SB_DB[("PostgreSQL DB<br/>(RLS Enabled)")]
     end
 
     %% --- EXTERNAL CONNECTIONS ---
     User -->|"Visit Page"| RSC
     User -->|"Interaction"| UI
 
-    %% 1. AUTH FLOW (Hybrid)
     AuthHook -->|"Login (Client SDK)"| SB_Auth
     SB_Auth -.->|"Sync Session"| Middleware
 
-    %% 2. DATA FLOW
     FormHandler -->|"Invoke Action ('use server')"| S_Action
     Repo -->|"Query"| SB_DB
 
-    %% TYPE SAFETY LINKS
     Contract -.-> S_Action
     Contract -.-> Service
     Contract -.-> UI
@@ -85,28 +79,92 @@ graph TD
     class Contract shared;
 ```
 
+---
+
+## 📂 Cấu Trúc Thư Mục
+
+```
+flowva/
+├── .agent/                     # Cấu hình AI Agent (skills, workflows)
+│
+├── supabase/                   # Supabase CLI — quản lý DB local & migration
+│   ├── migrations/             # [QUAN TRỌNG] Lịch sử thay đổi schema DB (SQL files)
+│   ├── snippets/               # Các đoạn SQL tiện ích (seed data...)
+│   └── config.toml             # Cấu hình Supabase local (ports, auth...)
+│
+├── src/
+│   ├── app/                    # Next.js App Router — chỉ chứa Routing & Layout
+│   │   ├── (auth)/             # Route group: trang đăng nhập / đăng ký
+│   │   ├── (main)/             # Route group: app chính (yêu cầu đăng nhập)
+│   │   │   ├── dashboard/      # Trang tổng quan dự án
+│   │   │   ├── chat/           # Tính năng chat (Discord-like)
+│   │   │   └── calendar/       # Tính năng lịch
+│   │   ├── projects/           # Trang chọn / quản lý dự án
+│   │   ├── layout.tsx          # Root layout (fonts, metadata)
+│   │   └── global.css          # Tailwind CSS v4 — file style chính
+│   │
+│   ├── backend/                # Server-side only — KHÔNG import vào Client Component
+│   │   ├── services/           # [CỐT LÕI] Business logic & tất cả query Supabase
+│   │   └── lib/supabase/       # Khởi tạo Supabase Client (server / browser / admin)
+│   │
+│   ├── frontend/               # Client-side UI — quản lý theo tính năng (Feature-based)
+│   │   ├── features/           # Mỗi tính năng là 1 folder độc lập
+│   │   │   ├── auth/           # Đăng nhập, đăng ký
+│   │   │   ├── tasks/          # Quản lý task (Kanban board)
+│   │   │   ├── dashboard/      # Widget thống kê, activity feed
+│   │   │   ├── chat/           # Giao diện chat, reactions, mentions
+│   │   │   ├── calendar/       # Giao diện lịch
+│   │   │   └── landing/        # Trang chủ (chưa đăng nhập)
+│   │   ├── components/         # UI component dùng chung (Button, Modal, Input...)
+│   │   └── lib/                # Utilities dùng chung (cn, format, hooks...)
+│   │
+│   └── shared/                 # Contracts — dùng cho cả frontend lẫn backend
+│       └── types/              # TypeScript types & DTOs
+│           ├── database.types.ts   # [AUTO-GEN] Types từ Supabase schema
+│           └── *.ts                # App-level types (Task, User, Sprint...)
+│
+├── middleware.ts               # Bảo vệ route bằng Supabase session
+├── next.config.ts
+├── package.json
+└── tsconfig.json
+```
+
+---
+
 ## 🧩 Key Concepts
 
 ### 1. Frontend (Client Components)
 
-- **UI Components**: Located in `src/frontend/features/[feature]/components`.
-- **Client Logic**: Minimal logic, primarily form handling and calling Server Actions.
-- **Auth**: Uses Supabase Client SDK for direct authentication.
+- **UI Components**: Đặt trong `src/frontend/features/[feature]/components`. Không chứa business logic.
+- **Client Logic**: Tối giản — chủ yếu xử lý form và gọi Server Actions.
+- **State**: Zustand chỉ cho UI state (không lưu server data vào store).
+- **Auth**: Supabase Browser Client SDK cho đăng nhập / đăng ký phía client.
 
-### 2. Server Entries
+### 2. Server Entry Points
 
-- **Server Components (RSC)**: Fetch data directly via Services during initial render (`page.tsx`).
-- **Server Actions**: Handle mutations (POST/PUT/DELETE) invoked by client events. Located in `src/actions` or feature folders.
+- **Server Components (RSC)**: Fetch data trực tiếp qua Services khi render lần đầu (`page.tsx`).
+- **Server Actions** (`actions.ts`): Xử lý mutations (tạo/sửa/xóa). Client gọi như function thường, Next.js tự tạo POST request.
 
-### 3. Backend Logic (Pure Server)
+### 3. Backend — Service Layer
 
-- **Service Layer**: Contains all business logic and authorization checks. Located in `src/backend/services`.
-- **Prisma Client**: Direct database access, only called by the Service Layer.
+- **Service** (`src/backend/services/[name].service.ts`): Chứa toàn bộ business logic, authorization check, và Supabase queries.
+- **Supabase Client**: Không bao giờ gọi trực tiếp từ `actions.ts` — phải đi qua Service.
+- Bảo mật được enforce ở **2 lớp**: Service Layer (application) + RLS (database).
 
-### 4. Data Flow
+### 4. Database — Supabase + RLS
 
-1. **User Interaction** triggers a Form or Event.
-2. **Server Action** is invoked directly (`use server`).
-3. **Service Layer** processes the request.
-4. **Database** is updated via Prisma.
-5. **UI** updates (via `revalidatePath` or optimistic updates).
+- Toàn bộ thay đổi schema qua **Migration Files** trong `supabase/migrations/`.
+- **Row Level Security (RLS)** bật cho mọi bảng — data được cô lập ở tầng database.
+- TypeScript types tự generate từ schema thực tế: `npm run gen-types`.
+
+### 5. Data Flow
+
+```
+User Interaction
+    → Form / Event Handler (Client)
+    → Server Action [use server] (actions.ts)
+    → Service Layer (business logic + auth check)
+    → Supabase Client (query DB)
+    → PostgreSQL (RLS validate)
+    → revalidatePath / response về UI
+```
