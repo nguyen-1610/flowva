@@ -853,6 +853,10 @@ export type Database = {
       }
       is_admin_or_owner: { Args: { p_id: string }; Returns: boolean }
       is_project_member: { Args: { p_id: string }; Returns: boolean }
+      is_project_member_bypass: {
+        Args: { p_project_id: string; p_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       chat_conversation_type: "direct" | "group" | "project" | "task"

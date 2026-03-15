@@ -16,37 +16,35 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
     <div
       className={cn(
         'relative flex h-full shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300',
-        isCollapsed ? 'w-20' : 'w-64',
+        isCollapsed ? 'w-16' : 'w-60',
       )}
     >
       {/* Left Toggle Button */}
       <button
         onClick={onToggleCollapse}
-        className="absolute top-6 -right-3 z-50 cursor-pointer rounded-full border border-slate-200 bg-white p-1 text-slate-500 shadow-sm hover:bg-slate-100"
+        className="absolute top-5 -right-3 z-50 cursor-pointer rounded-full border border-slate-200 bg-white p-1 text-slate-500 shadow-sm hover:bg-slate-100"
       >
-        {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        {isCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
       </button>
 
       {/* Header */}
       <div
         className={cn(
-          'flex items-center border-b border-slate-200 p-4',
+          'flex items-center border-b border-slate-200 py-3 px-4',
           isCollapsed ? 'justify-center' : 'justify-between',
         )}
       >
-        {!isCollapsed && <h2 className="text-lg font-bold text-slate-800">Messages</h2>}
-        <button className="cursor-pointer rounded-md p-1.5 text-slate-500 transition-colors hover:bg-slate-200">
-          <Plus size={18} />
+        {!isCollapsed && <h2 className="text-base font-bold text-slate-800">Messages</h2>}
+        <button className="cursor-pointer rounded-md p-1 text-slate-500 transition-colors hover:bg-slate-200">
+          <Plus size={16} />
         </button>
       </div>
 
-      {/* No Search Bar Here - Moved to Top Navigation as per request */}
-
-      <div className="mt-2 flex-1 space-y-1 overflow-y-auto px-2">
+      <div className="mt-2 flex-1 space-y-0.5 overflow-y-auto px-2">
         {/* Channels Section */}
         <div
           className={cn(
-            'px-3 py-2 text-xs font-semibold tracking-wider text-slate-400 uppercase',
+            'px-2 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase',
             isCollapsed ? 'text-center' : '',
           )}
         >
@@ -58,7 +56,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
             <div
               key={thread.id}
               className={cn(
-                'group flex cursor-pointer items-center rounded-lg p-2.5 transition-colors',
+                'group flex cursor-pointer items-center rounded-md p-2 transition-colors',
                 thread.id === '1'
                   ? 'border border-slate-200 bg-white shadow-sm'
                   : 'hover:bg-slate-200/50',
@@ -69,16 +67,16 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
               {isCollapsed ? (
                 <div className="relative">
                   <Hash
-                    size={20}
+                    size={18}
                     className={thread.id === '1' ? 'text-indigo-600' : 'text-slate-400'}
                   />
                   {thread.unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-indigo-600"></span>
+                    <span className="absolute -top-1 -right-1 h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
                   )}
                 </div>
               ) : (
                 <>
-                  <span className="mr-2 w-4 text-lg font-bold text-slate-400">#</span>
+                  <span className="mr-2 w-3 text-base font-bold text-slate-400">#</span>
                   <div className="min-w-0 flex-1">
                     <p
                       className={cn(
@@ -88,12 +86,9 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
                     >
                       {thread.name}
                     </p>
-                    {thread.id === '1' && (
-                      <p className="mt-0.5 truncate text-xs text-slate-400">{thread.lastMessage}</p>
-                    )}
                   </div>
                   {thread.unreadCount > 0 && (
-                    <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[9px] font-bold text-white">
                       {thread.unreadCount}
                     </span>
                   )}
@@ -105,12 +100,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
         {/* DMs Section */}
         <div
           className={cn(
-            'mt-4 flex items-center px-3 py-2 text-xs font-semibold tracking-wider text-slate-400 uppercase',
+            'mt-4 flex items-center px-2 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase',
             isCollapsed ? 'justify-center' : 'justify-between',
           )}
         >
           {isCollapsed ? 'DM' : <span>Direct Messages</span>}
-          {!isCollapsed && <Plus size={14} className="cursor-pointer hover:text-slate-600" />}
+          {!isCollapsed && <Plus size={12} className="cursor-pointer hover:text-slate-600" />}
         </div>
         {threads
           .filter((t) => t.type === 'direct')
@@ -118,14 +113,14 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
             <div
               key={thread.id}
               className={cn(
-                'flex cursor-pointer items-center rounded-lg p-2.5 transition-colors hover:bg-slate-200/50',
+                'flex cursor-pointer items-center rounded-md p-2 transition-colors hover:bg-slate-200/50',
                 isCollapsed ? 'justify-center' : '',
               )}
               title={isCollapsed ? thread.name : ''}
             >
-              <div className={cn('relative', isCollapsed ? '' : 'mr-3')}>
-                <img src={thread.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
-                <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-slate-50 bg-green-500"></span>
+              <div className={cn('relative', isCollapsed ? '' : 'mr-2.5')}>
+                <img src={thread.avatar} alt="" className="h-6 w-6 rounded-full object-cover" />
+                <span className="absolute right-0 bottom-0 h-2 w-2 rounded-full border border-slate-50 bg-green-500"></span>
               </div>
               {!isCollapsed && (
                 <>
@@ -133,7 +128,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
                     <p className="truncate text-sm font-medium text-slate-700">{thread.name}</p>
                   </div>
                   {thread.unreadCount > 0 && (
-                    <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[9px] font-bold text-white">
                       {thread.unreadCount}
                     </span>
                   )}
@@ -143,6 +138,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isCollapsed, onToggleCollapse
           ))}
       </div>
     </div>
+
   );
 };
 

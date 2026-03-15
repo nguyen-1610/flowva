@@ -119,6 +119,7 @@ const ChatInterface: React.FC = () => {
       />
     </div>
   );
+
 };
 
 export default ChatInterface;

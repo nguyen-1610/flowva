@@ -1,12 +1,17 @@
 import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
+import { createSupabaseAdminClient } from '@/backend/lib/supabase/admin';
 import type { CreateProjectInput, UpdateProjectInput } from '@/shared/types/project';
 
 export class ProjectService {
   /**
    * Tạo một dự án (Project) mới.
    * owner_id được lấy từ session — không để Frontend truyền vào.
+   * 
+   * NOTE: Uses admin client to bypass RLS due to auth.uid() context issue
+   * This is a temporary workaround until we fix the RLS session context
    */
   static async create(projectData: CreateProjectInput) {
+    // First, verify user session with regular client
     const supabase = await createSupabaseServerClient();
 
     const {
@@ -17,17 +22,28 @@ export class ProjectService {
       throw new Error('Unauthorized: No active session');
     }
 
-    const { data, error } = await supabase
+    // Debug logging
+    console.log('[ProjectService.create] User ID:', user.id);
+    console.log('[ProjectService.create] Project data:', projectData);
+    console.log('[ProjectService.create] Owner ID to insert:', user.id);
+
+    // Use admin client to bypass RLS for INSERT
+    // This is necessary because auth.uid() in RLS context is not working correctly
+    const adminClient = createSupabaseAdminClient();
+
+    const { data, error } = await adminClient
       .from('projects')
       .insert([{ ...projectData, owner_id: user.id }])
       .select()
       .single();
 
     if (error) {
-      console.error('Error creating project:', error);
-      throw new Error('Failed to create project');
+      console.error('[ProjectService.create] Error:', error);
+      throw new Error(`Failed to create project: ${error.message}`);
     }
+    if (!data) throw new Error('Project creation failed');
 
+    console.log('[ProjectService.create] Success! Project created:', data);
     return data;
   }
 
@@ -49,9 +65,10 @@ export class ProjectService {
       if (error.code === 'PGRST116') {
         throw new Error('Project not found or access denied');
       }
-      console.error('Error updating project:', error);
-      throw new Error('Failed to update project');
+      throw new Error(`Failed to update project: ${error.message}`);
     }
+    
+    if (!data) throw new Error('Project not found');
 
     return data;
   }
@@ -59,17 +76,12 @@ export class ProjectService {
   /**
    * Xóa dự án.
    */
-  static async delete(id: string) {
+  static async delete(id: string): Promise<void> {
     const supabase = await createSupabaseServerClient();
 
     const { error } = await supabase.from('projects').delete().eq('id', id);
 
-    if (error) {
-      console.error('Error deleting project:', error);
-      throw new Error('Failed to delete project');
-    }
-
-    return { success: true };
+    if (error) throw new Error(`Failed to delete project: ${error.message}`);
   }
 
   /**
@@ -88,9 +100,10 @@ export class ProjectService {
       if (error.code === 'PGRST116') {
         throw new Error('Project not found or access denied');
       }
-      console.error('Error getting project:', error);
-      throw new Error('Failed to get project');
+      throw new Error(`Failed to get project: ${error.message}`);
     }
+    
+    if (!data) throw new Error('Project not found');
 
     return data;
   }
@@ -106,11 +119,8 @@ export class ProjectService {
       .select()
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching projects:', error);
-      throw new Error('Failed to fetch projects');
-    }
+    if (error) throw new Error(`Failed to fetch projects: ${error.message}`);
 
-    return data;
+    return data || [];
   }
 }

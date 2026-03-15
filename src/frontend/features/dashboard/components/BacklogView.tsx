@@ -1,80 +1,32 @@
 'use client';
 
 import React from 'react';
-import { Plus, ChevronDown, MoreHorizontal, User as UserIcon, GripVertical } from 'lucide-react';
-import { Task } from '@/shared/types/ui-types';
+import { useSearchParams } from 'next/navigation';
+import { Plus, ChevronDown, MoreHorizontal, GripVertical, Loader2 } from 'lucide-react';
 import { useTasks } from '@/frontend/features/tasks/hooks/useTasks';
 import { TaskBacklogSkeleton } from '@/frontend/features/tasks/components/TaskBacklogSkeleton';
 import { cn } from '@/frontend/lib/utils';
-
-const mockBacklogTasks: Task[] = [
-  {
-    id: 't1',
-    title: 'Design Homepage Mockup',
-    columnId: 'TODO',
-    assignees: [],
-    dueDate: 'Tomorrow',
-    priority: 'High',
-    tag: 'Design',
-    sprint: 'Sprint 24',
-  },
-  {
-    id: 't2',
-    title: 'Integrate API Endpoints',
-    columnId: 'IN_PROGRESS',
-    assignees: [],
-    dueDate: 'Oct 24',
-    priority: 'Medium',
-    tag: 'Backend',
-    sprint: 'Sprint 24',
-  },
-  {
-    id: 't3',
-    title: 'Write Documentation',
-    columnId: 'TODO',
-    assignees: [],
-    dueDate: 'Next Week',
-    priority: 'Low',
-    tag: 'Docs',
-    sprint: 'Backlog',
-  },
-  {
-    id: 't4',
-    title: 'Fix Navigation Bug',
-    columnId: 'REVIEW',
-    assignees: [],
-    dueDate: 'Today',
-    priority: 'High',
-    tag: 'Bug',
-    sprint: 'Sprint 24',
-  },
-  {
-    id: 't6',
-    title: 'Update Color Palette',
-    columnId: 'TODO',
-    assignees: [],
-    dueDate: 'Oct 30',
-    priority: 'Low',
-    tag: 'Design',
-    sprint: 'Backlog',
-  },
-  {
-    id: 't7',
-    title: 'Database Migration',
-    columnId: 'TODO',
-    assignees: [],
-    dueDate: 'Nov 1',
-    priority: 'High',
-    tag: 'DevOps',
-    sprint: 'Backlog',
-  },
-];
+import { TaskDTO } from '@/shared/types/task';
 
 const BacklogView: React.FC = () => {
-  const { tasks: data, isLoading, isError } = useTasks();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get('project');
+  const { tasks, isLoading, isError } = useTasks(projectId);
 
-  const sprintTasks = data?.filter((t) => t.sprint === 'Sprint 24') || [];
-  const backlogTasks = data?.filter((t) => !t.sprint || t.sprint === 'Backlog') || [];
+  // In a real app, we'd also fetch Sprints. For now, we'll group by sprint_id presence.
+  const sprintTasks = tasks?.filter((t) => t.sprint_id !== null) || [];
+  const backlogTasks = tasks?.filter((t) => t.sprint_id === null) || [];
+
+  if (!projectId) {
+    return (
+      <div className="flex h-full items-center justify-center bg-white p-8">
+        <div className="text-center">
+           <h2 className="text-xl font-bold text-slate-800">No Project Selected</h2>
+           <p className="text-slate-500 mt-2">Please select a project from the sidebar or projects page.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) return <TaskBacklogSkeleton />;
 
@@ -83,13 +35,13 @@ const BacklogView: React.FC = () => {
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <h3 className="text-lg font-medium text-slate-900">Failed to load backlog</h3>
-          <p className="text-slate-500">Please try again later.</p>
+          <p className="text-slate-500">{isError.message || 'Please try again later.'}</p>
         </div>
       </div>
     );
   }
 
-  const renderTaskRow = (task: Task) => (
+  const renderTaskRow = (task: TaskDTO) => (
     <div
       key={task.id}
       className="group flex cursor-pointer items-center gap-3 border-b border-slate-100 bg-white p-2.5 transition-colors hover:bg-slate-50"
@@ -101,9 +53,9 @@ const BacklogView: React.FC = () => {
       <div
         className={cn(
           'flex h-4 w-4 items-center justify-center rounded border shadow-sm',
-          task.priority === 'High'
+          task.priority === 'urgent' || task.priority === 'high'
             ? 'border-red-200 bg-red-50'
-            : task.priority === 'Medium'
+            : task.priority === 'medium'
               ? 'border-orange-200 bg-orange-50'
               : 'border-blue-200 bg-blue-50',
         )}
@@ -111,28 +63,29 @@ const BacklogView: React.FC = () => {
         <div
           className={cn(
             'h-2 w-2 rounded-full',
-            task.priority === 'High'
+            task.priority === 'urgent' || task.priority === 'high'
               ? 'bg-red-500'
-              : task.priority === 'Medium'
+              : task.priority === 'medium'
                 ? 'bg-orange-500'
                 : 'bg-blue-500',
           )}
         ></div>
       </div>
       <div className="min-w-0 flex-1">
-        <span className="mr-2 font-mono text-xs text-slate-400">{task.id.toUpperCase()}</span>
+        <span className="mr-2 font-mono text-[10px] text-slate-400 uppercase">{task.id.slice(0, 8)}</span>
         <span className="text-sm font-medium text-slate-700">{task.title}</span>
       </div>
 
       <div className="flex items-center gap-4 px-2">
-        <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
-          {task.tag || 'General'}
-        </span>
+        {task.tags && task.tags.length > 0 && (
+          <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+            {task.tags[0]}
+          </span>
+        )}
 
         <div className="flex w-16 -space-x-1">
-          {/* Mock Assignee UI */}
           <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white bg-slate-200 text-[10px] font-bold text-slate-500">
-            {task.assignees && task.assignees.length > 0 ? task.assignees[0].name.charAt(0) : '?'}
+            ?
           </div>
         </div>
 
@@ -140,18 +93,16 @@ const BacklogView: React.FC = () => {
           <span
             className={cn(
               'inline-block rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap',
-              task.columnId === 'DONE'
-                ? 'bg-green-100 text-green-700'
-                : task.columnId === 'IN_PROGRESS'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-slate-100 text-slate-600',
+              task.column_id
+                ? 'bg-blue-100 text-blue-700'
+                : 'bg-slate-100 text-slate-600',
             )}
           >
-            {task.columnId.replace('_', ' ')}
+            {task.column_id ? 'IN BOARD' : 'BACKLOG'}
           </span>
         </div>
 
-        <button className="text-slate-400 hover:text-slate-600">
+        <button className="cursor-pointer text-slate-400 hover:text-slate-600">
           <MoreHorizontal size={16} />
         </button>
       </div>
@@ -159,70 +110,78 @@ const BacklogView: React.FC = () => {
   );
 
   return (
-    <div className="h-full flex-1 overflow-y-auto bg-white p-8">
-      <div className="mb-8 flex items-end justify-between">
+    <div className="h-full flex-1 overflow-y-auto bg-white p-6">
+      <div className="mb-6 flex items-end justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Backlog</h2>
-          <p className="mt-1 text-sm text-slate-500">Project Alpha</p>
+          <h2 className="text-lg font-bold text-slate-800">Backlog</h2>
+          <p className="mt-0.5 text-xs text-slate-500">Project View</p>
         </div>
         <div className="flex gap-2">
-          <button className="cursor-pointer rounded-md bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200">
+          <button className="cursor-pointer rounded-md bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200">
             Insights
           </button>
-          <button className="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700">
-            Complete Sprint
+          <button className="cursor-pointer rounded-md bg-indigo-600 px-2.5 py-1.5 text-xs font-bold text-white transition-colors hover:bg-indigo-700">
+            Create Issue
           </button>
         </div>
       </div>
 
-      {/* Active Sprint Section */}
-      <div className="mb-8 overflow-hidden rounded-xl border border-slate-200 bg-slate-50/50">
-        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-slate-100 p-4">
+      {/* Active Sprint Section (Mocking Sprint 24 for UI consistency) */}
+      <div className="mb-6 overflow-hidden rounded-lg border border-slate-200 bg-slate-50/50">
+        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-slate-100 px-3 py-2">
           <div className="flex items-center gap-2">
-            <ChevronDown size={16} className="text-slate-500" />
-            <h3 className="text-sm font-bold text-slate-700">Sprint 24</h3>
-            <span className="text-xs font-medium text-slate-400">
+            <ChevronDown size={14} className="text-slate-500" />
+            <h3 className="text-xs font-bold text-slate-700">Sprint 24</h3>
+            <span className="text-[10px] font-medium text-slate-400">
               (Active) • {sprintTasks.length} issues
             </span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="rounded bg-slate-200 px-2 py-1 text-xs font-medium text-slate-600">
+          <div className="flex items-center gap-2">
+            <span className="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium text-slate-600">
               Oct 10 - Oct 24
             </span>
             <button className="cursor-pointer rounded p-1 hover:bg-slate-200">
-              <MoreHorizontal size={16} className="text-slate-500" />
+              <MoreHorizontal size={14} className="text-slate-500" />
             </button>
           </div>
         </div>
         <div>
-          {sprintTasks.map(renderTaskRow)}
-          <div className="cursor-text border-t border-slate-100 p-2 transition-colors hover:bg-slate-50">
+          {sprintTasks.length > 0 ? (
+            sprintTasks.map(renderTaskRow)
+          ) : (
+            <div className="p-6 text-center text-xs text-slate-400">No tasks in current sprint</div>
+          )}
+          <div className="cursor-text border-t border-slate-100 p-1.5 transition-colors hover:bg-slate-50">
             <div className="flex items-center gap-2 p-1 text-slate-500">
-              <Plus size={16} />
-              <span className="text-sm">Create issue</span>
+              <Plus size={14} />
+              <span className="text-xs">Create issue</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Backlog Section */}
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50/50">
-        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-100 p-4">
+      <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50/50">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-100 px-3 py-2">
           <div className="flex items-center gap-2">
-            <ChevronDown size={16} className="text-slate-500" />
-            <h3 className="text-sm font-bold text-slate-700">Backlog</h3>
-            <span className="text-xs font-medium text-slate-400">{backlogTasks.length} issues</span>
+            <ChevronDown size={14} className="text-slate-500" />
+            <h3 className="text-xs font-bold text-slate-700">Backlog</h3>
+            <span className="text-[10px] font-medium text-slate-400">{backlogTasks.length} issues</span>
           </div>
-          <button className="cursor-pointer rounded bg-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-300">
+          <button className="cursor-pointer rounded bg-slate-200 px-2 py-1 text-[10px] font-bold text-slate-700 transition-colors hover:bg-slate-300">
             Create Sprint
           </button>
         </div>
-        <div className="min-h-25">
-          {backlogTasks.map(renderTaskRow)}
-          <div className="cursor-text border-t border-slate-100 p-2 transition-colors hover:bg-slate-50">
+        <div className="min-h-20">
+          {backlogTasks.length > 0 ? (
+            backlogTasks.map(renderTaskRow)
+          ) : (
+            <div className="p-6 text-center text-xs text-slate-400">Backlog is empty</div>
+          )}
+          <div className="cursor-text border-t border-slate-100 p-1.5 transition-colors hover:bg-slate-50">
             <div className="flex items-center gap-2 p-1 text-slate-500">
-              <Plus size={16} />
-              <span className="text-sm">Create issue</span>
+              <Plus size={14} />
+              <span className="text-xs">Create issue</span>
             </div>
           </div>
         </div>
