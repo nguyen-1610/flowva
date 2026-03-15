@@ -44,34 +44,34 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
     <div
       className={cn(
         'relative flex h-full shrink-0 flex-col border-r border-slate-200 bg-slate-50 transition-all duration-300',
-        isCollapsed ? 'w-20' : 'w-64',
+        isCollapsed ? 'w-16' : 'w-60',
       )}
     >
       {/* Collapse Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute top-6 -right-3 z-50 cursor-pointer rounded-full border border-slate-200 bg-white p-1 text-slate-500 shadow-sm hover:bg-slate-100"
+        className="absolute top-5 -right-3 z-50 cursor-pointer rounded-full border border-slate-200 bg-white p-1 text-slate-500 shadow-sm hover:bg-slate-100"
       >
-        {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        {isCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
       </button>
 
       {/* 1. Calendar Scope Dropdown */}
       <div
-        className={cn('border-b border-slate-200/50 p-4', isCollapsed ? 'flex justify-center' : '')}
+        className={cn('border-b border-slate-200/50 py-3 px-3', isCollapsed ? 'flex justify-center' : '')}
       >
         {!isCollapsed ? (
           <div className="group relative">
-            <button className="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 shadow-sm transition-all hover:border-slate-300">
+            <button className="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-800 shadow-sm transition-all hover:border-slate-300">
               {calendarScope}
-              <ChevronDown size={14} className="text-slate-400" />
+              <ChevronDown size={12} className="text-slate-400" />
             </button>
             {/* Mock Dropdown */}
             <div className="absolute top-full left-0 z-50 mt-1 hidden w-full rounded-lg border border-slate-200 bg-white shadow-lg group-hover:block">
-              {['Project Calendar', 'Team Calendar', 'Personal Calendar'].map((scope) => (
+              {['Project Calendar', 'Team Calendar', 'Personal'].map((scope) => (
                 <div
                   key={scope}
                   onClick={() => setCalendarScope(scope)}
-                  className="cursor-pointer px-3 py-2 text-sm text-slate-600 first:rounded-t-lg last:rounded-b-lg hover:bg-indigo-50 hover:text-indigo-600"
+                  className="cursor-pointer px-2.5 py-1.5 text-xs text-slate-600 first:rounded-t-lg last:rounded-b-lg hover:bg-indigo-50 hover:text-indigo-600"
                 >
                   {scope}
                 </div>
@@ -80,23 +80,23 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
           </div>
         ) : (
           <div
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-indigo-100 text-xs font-bold text-indigo-600"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-indigo-100 text-xs font-bold text-indigo-600"
             title={calendarScope}
           >
-            <CalendarIcon size={20} />
+            <CalendarIcon size={16} />
           </div>
         )}
       </div>
 
-      <div className="flex-1 space-y-6 overflow-y-auto px-4 py-4">
+      <div className="flex-1 space-y-5 overflow-y-auto px-3 py-3">
         {/* 2. Calendar Views */}
         <div>
           {!isCollapsed && (
-            <h3 className="mb-3 text-xs font-bold tracking-wider text-slate-400 uppercase">
-              Calendar Views
+            <h3 className="mb-2 px-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+              Views
             </h3>
           )}
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {views.map((view) => {
               const Icon = view.icon;
               const isActive = currentView === view.id;
@@ -106,14 +106,14 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                   onClick={() => onViewChange(view.id)}
                   title={isCollapsed ? view.label : ''}
                   className={cn(
-                    'flex w-full cursor-pointer items-center rounded-lg py-2.5 text-sm font-medium transition-all',
-                    isCollapsed ? 'justify-center px-0' : 'gap-3 px-3',
+                    'flex w-full cursor-pointer items-center rounded-md py-1.5 text-sm font-medium transition-all',
+                    isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-2.5',
                     isActive
-                      ? 'bg-purple-50 font-semibold text-purple-700'
+                      ? 'bg-purple-50 text-purple-700'
                       : 'text-slate-500 hover:bg-slate-200/50 hover:text-slate-800',
                   )}
                 >
-                  <Icon size={18} className={isActive ? 'text-purple-600' : 'text-slate-400'} />
+                  <Icon size={16} className={isActive ? 'text-purple-600' : 'text-slate-400'} />
                   {!isCollapsed && <span>{view.label}</span>}
                 </button>
               );
@@ -123,36 +123,34 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
 
         {/* 3. Mini Calendar */}
         {!isCollapsed && (
-          <div>
-            <div className="mb-3 flex items-center justify-between px-1">
-              <h3 className="text-sm font-bold text-slate-800">October 2023</h3>
-              <div className="flex gap-1">
+          <div className="px-1">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="text-xs font-bold text-slate-800">Oct 2023</h3>
+              <div className="flex gap-0.5">
                 <ChevronLeft
-                  size={14}
+                  size={12}
                   className="cursor-pointer text-slate-400 hover:text-slate-600"
                 />
                 <ChevronRight
-                  size={14}
+                  size={12}
                   className="cursor-pointer text-slate-400 hover:text-slate-600"
                 />
               </div>
             </div>
-            <div className="mb-2 grid grid-cols-7 text-center text-[10px] font-medium text-slate-400">
+            <div className="mb-1.5 grid grid-cols-7 text-center text-[9px] font-bold text-slate-400 uppercase">
               {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, idx) => (
                 <div key={idx}>{d}</div>
               ))}
             </div>
-            <div className="grid grid-cols-7 gap-y-2 text-center text-xs text-slate-600">
+            <div className="grid grid-cols-7 gap-y-1 text-center text-[10px] text-slate-600">
               {miniDates.map((d, i) => {
-                // Just a visual approximation
                 const day = i > 3 && i <= 34 ? i - 3 : '';
                 const isSelected = day === 24;
-                // const isToday = day === 24; // Mock
                 return (
                   <div
                     key={i}
                     className={cn(
-                      'mx-auto flex h-6 w-6 cursor-pointer items-center justify-center rounded-full hover:bg-slate-100',
+                      'mx-auto flex h-5 w-5 cursor-pointer items-center justify-center rounded-full hover:bg-slate-100',
                       isSelected ? 'bg-purple-600 text-white hover:bg-purple-700' : '',
                     )}
                   >
@@ -166,11 +164,11 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
 
         {/* 4. Event Filters */}
         {!isCollapsed && (
-          <div>
-            <h3 className="mb-3 text-xs font-bold tracking-wider text-slate-400 uppercase">
-              Event Filters
+          <div className="px-1">
+            <h3 className="mb-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+              Filters
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {[
                 { id: 'meetings', label: 'Meetings', color: 'text-purple-500' },
                 { id: 'reviews', label: 'Reviews', color: 'text-blue-500' },
@@ -180,19 +178,19 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                 <div
                   key={item.id}
                   onClick={() => onToggleFilter(item.id)}
-                  className="group flex cursor-pointer items-center gap-3 px-1"
+                  className="group flex cursor-pointer items-center gap-2.5"
                 >
                   {filters[item.id as keyof typeof filters] ? (
-                    <CheckSquare size={16} className={`${item.color}`} />
+                    <CheckSquare size={14} className={`${item.color}`} />
                   ) : (
-                    <Square size={16} className="text-slate-300" />
+                    <Square size={14} className="text-slate-300" />
                   )}
-                  <span className="text-sm text-slate-600 group-hover:text-slate-900">
+                  <span className="text-xs text-slate-600 group-hover:text-slate-900">
                     {item.label}
                   </span>
                   <span
                     className={cn(
-                      'ml-auto h-2 w-2 rounded-full',
+                      'ml-auto h-1.5 w-1.5 rounded-full',
                       item.color.replace('text-', 'bg-'),
                     )}
                   ></span>
@@ -204,24 +202,25 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
 
         {/* 5. Critical Milestones */}
         {!isCollapsed && (
-          <div>
-            <h3 className="mb-3 text-xs font-bold tracking-wider text-red-400 uppercase">
-              Critical Milestones
+          <div className="px-1">
+            <h3 className="mb-2 text-[10px] font-bold tracking-wider text-red-400 uppercase">
+              Milestones
             </h3>
-            <div className="space-y-3">
-              <div className="rounded-lg border border-red-100 bg-red-50 p-3">
-                <h4 className="text-sm font-bold text-red-700">Sprint 42 Release</h4>
-                <p className="mt-1 text-xs text-red-500">Oct 12 • 4 days left</p>
+            <div className="space-y-2">
+              <div className="rounded-lg border border-red-100 bg-red-50 p-2">
+                <h4 className="text-xs font-bold text-red-700 leading-tight">Sprint 42 Release</h4>
+                <p className="mt-0.5 text-[10px] text-red-500">Oct 12 • 4 days left</p>
               </div>
-              <div className="rounded-lg border border-blue-100 bg-blue-50 p-3">
-                <h4 className="text-sm font-bold text-blue-700">Security Audit</h4>
-                <p className="mt-1 text-xs text-blue-500">Oct 20 • 12 days left</p>
+              <div className="rounded-lg border border-blue-100 bg-blue-50 p-2">
+                <h4 className="text-xs font-bold text-blue-700 leading-tight">Security Audit</h4>
+                <p className="mt-0.5 text-[10px] text-blue-500">Oct 20 • 12 days left</p>
               </div>
             </div>
           </div>
         )}
       </div>
     </div>
+
   );
 };
 

@@ -1,18 +1,25 @@
 import useSWR from 'swr';
-import { getTasksMock } from '../services/task.mock';
-import { Task } from '@/shared/types/ui-types';
+import { getTasksAction } from '../actions';
+import { TaskDTO } from '@/shared/types/task';
 
 // SWR key for caching
-const KEY = '/api/tasks/mock';
+const getKey = (projectId: string | null) => projectId ? `/api/projects/${projectId}/tasks` : null;
 
-const fetcher = () => getTasksMock();
-
-export function useTasks() {
-  const { data, error, isLoading, mutate } = useSWR<Task[]>(KEY, fetcher, {
-    revalidateOnFocus: true, // Auto revalidate when window gets focus
-    dedupingInterval: 5000, // Debounce requests
-    keepPreviousData: true,
-  });
+export function useTasks(projectId: string | null) {
+  const { data, error, isLoading, mutate } = useSWR<TaskDTO[]>(
+    getKey(projectId),
+    async () => {
+      if (!projectId) return [];
+      const res = await getTasksAction(projectId);
+      if (!res.success) throw new Error(res.error);
+      return res.data;
+    },
+    {
+      revalidateOnFocus: true,
+      dedupingInterval: 5000,
+      keepPreviousData: true,
+    }
+  );
 
   return {
     tasks: data,

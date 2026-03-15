@@ -110,23 +110,23 @@ const CalendarView: React.FC = () => {
         onToggleFilter={toggleFilter}
       />
 
-      <div className="relative -mt-px -ml-px flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-tl-2xl border-t border-l border-slate-200 bg-white p-6 shadow-sm">
+      <div className="relative -mt-px -ml-px flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-tl-2xl border-t border-l border-slate-200 bg-white p-4 shadow-sm">
         {/* Main Content Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-slate-500">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
             <span>Team Workspace</span>
-            <ChevronRight size={14} />
+            <ChevronRight size={12} />
             <span className="font-bold text-slate-800">Calendar</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex rounded-lg bg-slate-100 p-1">
+          <div className="flex items-center gap-3">
+            <div className="flex rounded-lg bg-slate-100 p-0.5">
               {['Month', 'Week', 'Day', 'Today'].map((v) => (
                 <button
                   key={v}
                   className={cn(
-                    'cursor-pointer rounded-md px-4 py-1.5 text-xs font-medium transition-all',
-                    v.toLowerCase() === currentView || (v === 'Today' && false) // Just mock active state for now or link strictly
+                    'cursor-pointer rounded-md px-3 py-1 text-[10px] font-bold transition-all',
+                    v.toLowerCase() === currentView || (v === 'Today' && false)
                       ? 'bg-white text-slate-800 shadow-sm'
                       : 'text-slate-500 hover:text-slate-700',
                   )}
@@ -139,38 +139,38 @@ const CalendarView: React.FC = () => {
           </div>
         </div>
 
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-2xl font-bold text-slate-800">October 2023</h2>
-            <div className="flex gap-1">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold text-slate-800">October 2023</h2>
+            <div className="flex gap-0.5">
               <button className="cursor-pointer rounded-full p-1 text-slate-500 hover:bg-slate-100">
-                <ChevronLeft size={20} />
+                <ChevronLeft size={16} />
               </button>
               <button className="cursor-pointer rounded-full p-1 text-slate-500 hover:bg-slate-100">
-                <ChevronRight size={20} />
+                <ChevronRight size={16} />
               </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Info size={14} /> All times in GMT+1
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
+              <Info size={12} /> GMT+1
             </div>
-            <button className="flex cursor-pointer items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-purple-700">
-              <Plus size={16} /> Create Event
+            <button className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-purple-700 active:scale-[0.98]">
+              <Plus size={14} /> Event
             </button>
-            <div className="flex -space-x-2">
+            <div className="flex -space-x-1.5">
               {[1, 2, 3].map((i) => (
                 <Image
                   key={i}
                   src={getMockAvatar(i + 10)}
                   alt="Team member"
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 rounded-full border-2 border-white"
+                  width={24}
+                  height={24}
+                  className="h-6 w-6 rounded-full border-2 border-white"
                 />
               ))}
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-purple-100 text-xs font-bold text-purple-600">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-purple-100 text-[9px] font-bold text-purple-600">
                 +5
               </div>
             </div>
@@ -184,7 +184,7 @@ const CalendarView: React.FC = () => {
             {days.map((day) => (
               <div
                 key={day}
-                className="py-4 text-center text-xs font-bold tracking-widest text-slate-500 uppercase"
+                className="py-2 text-center text-[10px] font-bold tracking-widest text-slate-500 uppercase"
               >
                 {day}
               </div>
@@ -205,7 +205,7 @@ const CalendarView: React.FC = () => {
                 <div
                   key={idx}
                   className={cn(
-                    'group relative min-h-25 border-r border-b border-slate-100 p-2 transition-colors hover:bg-slate-50',
+                    'group relative border-r border-b border-slate-100 p-1.5 transition-colors hover:bg-slate-50',
                     idx % 7 === 0 ? 'border-l' : '',
                   )}
                 >
@@ -214,33 +214,27 @@ const CalendarView: React.FC = () => {
                       <div className="mb-1 flex items-start justify-between">
                         <span
                           className={cn(
-                            'text-sm font-medium',
+                            'text-xs font-medium',
                             displayDate === 1 ? 'text-slate-400' : 'text-slate-400',
                           )}
                         >
-                          {displayDate === 1 ? '1' : displayDate}
+                          {displayDate}
                         </span>
                         {displayDate === 24 && (
-                          <span className="h-2 w-2 rounded-full bg-red-500"></span>
+                          <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
                         )}
                       </div>
 
-                      {filters.freeTime && !isWeekend && currentEvents.length === 0 && (
-                        <div className="absolute inset-x-2 top-8 bottom-2 flex items-center justify-center rounded border border-dashed border-slate-200 bg-slate-50 opacity-0 transition-opacity group-hover:opacity-100">
-                          <span className="text-[10px] text-slate-400">Deep Work (Free)</span>
-                        </div>
-                      )}
-
-                      <div className="mt-2 space-y-1.5">
+                      <div className="space-y-1">
                         {currentEvents.map((evt) => (
                           <div
                             key={evt.id}
                             className={cn(
-                              'flex cursor-pointer items-center gap-1 rounded-md border px-2 py-1.5 text-[10px] font-semibold shadow-sm transition-opacity hover:opacity-90',
+                              'flex cursor-pointer items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-bold shadow-xs transition-opacity hover:opacity-90',
                               evt.color,
                             )}
                           >
-                            {evt.type === 'meeting' && <Video size={10} />}
+                            {evt.type === 'meeting' && <Video size={8} />}
                             <span className="truncate">{evt.title}</span>
                           </div>
                         ))}
@@ -253,11 +247,14 @@ const CalendarView: React.FC = () => {
           </div>
         </div>
 
-        {/* Floating Action Button (Mock from image) */}
-        <div className="absolute right-8 bottom-8">
-          <button className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-purple-600 text-white shadow-lg shadow-purple-200 transition-transform hover:scale-105">
-            <Clock size={24} />
-            <div className="absolute top-3 right-3 h-2 w-2 rounded-full bg-white"></div>
+        {/* Floating Action Button */}
+        <div className="absolute right-6 bottom-6">
+          <button 
+            aria-label="Quick action"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-purple-600 text-white shadow-lg shadow-purple-200 transition-transform hover:scale-105 active:scale-95"
+          >
+            <Clock size={18} />
+            <div className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-white"></div>
           </button>
         </div>
       </div>

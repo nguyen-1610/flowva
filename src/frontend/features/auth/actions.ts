@@ -1,6 +1,6 @@
 'use server';
 
-import { createSupabaseServerClient } from '@/backend/lib/supabase/server';
+import { AuthService } from '@/backend/services/auth.service';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { LoginSchema, SignupSchema, type AuthResponse } from '@/shared/types/auth';
@@ -20,22 +20,18 @@ export async function login(
     };
   }
 
-  const supabase = await createSupabaseServerClient();
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
+  try {
+    // Use AuthService instead of direct Supabase call
+    await AuthService.login(email, password);
+    
+    revalidatePath('/', 'layout');
+    redirect('/projects');
+  } catch (error) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Login failed',
     };
   }
-
-  revalidatePath('/', 'layout');
-  redirect('/projects');
 }
 
 export async function signup(
@@ -56,40 +52,39 @@ export async function signup(
     };
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        name,
-      },
-    },
-  });
+  try {
+    // Use AuthService instead of direct Supabase call
+    const { session } = await AuthService.signup(email, password, name);
+    
+    // Nếu Supabase trả về session (Email Confirm tắt), ta login luôn
+    if (session) {
+      revalidatePath('/', 'layout');
+      redirect('/projects');
+    }
 
-  if (error) {
+    // Nếu không có session (cần verify email)
+    return {
+      success: true,
+      data: { message: 'Kiểm tra email để xác thực tài khoản' },
+    };
+  } catch (error) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Signup failed',
     };
   }
-
-  // Nếu Supabase trả về session (Email Confirm tắt), ta login luôn
-  if (data.session) {
-    revalidatePath('/', 'layout');
-    redirect('/projects');
-  }
-
-  // Nếu không có session (cần verify email)
-  return {
-    success: true,
-    data: { message: 'Kiểm tra email để xác thực tài khoản' },
-  };
 }
 
 export async function logout() {
-  const supabase = await createSupabaseServerClient();
-  await supabase.auth.signOut();
-  revalidatePath('/', 'layout');
-  redirect('/login');
+  try {
+    // Use AuthService instead of direct Supabase call
+    await AuthService.logout();
+    
+    revalidatePath('/', 'layout');
+    redirect('/login');
+  } catch (error) {
+    console.error('Logout error:', error);
+    // Still redirect even if logout fails
+    redirect('/login');
+  }
 }
